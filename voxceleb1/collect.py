@@ -7,6 +7,7 @@ from .Sample import Sample
 
 EXT = ".wav"
 ID_PREFIX = "id"
+DEV_MAP = {"dev": 1, "test": 0}
 
 
 def collect(root):
@@ -38,13 +39,24 @@ def _collect(root):
         data=None
     }
     """
-    for train_type in os.listdir(root):
-        train_path = os.path.join(root, train_type)
+    for train_type_str in os.listdir(root):
+        train_path = os.path.join(root, train_type_str)
+        if not os.path.isdir(train_path):
+            continue
+
+        train_type = DEV_MAP[train_type_str]
         subjects = os.listdir(train_path)
-        for uid_str in tqdm.tqdm(subjects, desc="Collecting %s" % train_type):
+        for uid_str in tqdm.tqdm(
+            subjects,
+            desc="Collecting %s" % train_type_str
+        ):
+            subject_dir = os.path.join(train_path, uid_str)
+            if not os.path.isdir(subject_dir):
+                continue
+            
             assert uid_str.startswith(ID_PREFIX)
             uid = int(uid_str.lstrip(ID_PREFIX))
-            subject_dir = os.path.join(train_path, uid_str)
+            
             assert os.path.isdir(subject_dir)
             for fpath in _depth_first_walk(subject_dir):
                 yield Sample(train_type, uid, fpath)

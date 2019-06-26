@@ -3,7 +3,7 @@ from .FragmentFile import FragmentFile
 
 class ChunkFile(FragmentFile):
 
-    def __init__(self, fpath, chunk_size):
+    def __init__(self, fpath, chunk_size=None):
         super().__init__(fpath)
         self.chunk_size = chunk_size
 

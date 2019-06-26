@@ -10,7 +10,7 @@ class FragmentFile:
     def save(self, arr):
         with open(self.fpath, "wb") as f:
             items = self.itemize(arr)
-            numpy.save(f, len(n))
+            numpy.save(f, len(items))
             for item in tqdm.tqdm(items, desc="Saving to %s" % self.fpath):
                 numpy.save(f, item)
 

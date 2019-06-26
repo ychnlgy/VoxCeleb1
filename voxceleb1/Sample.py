@@ -3,8 +3,6 @@ import scipy.io.wavfile
 import scipy.signal
 
 
-DEV_MAP = {"dev": 1, "test": 0}
-
 EXPECTED_RATE = 16000
 
 # Define parameters that produce spectrograms of
@@ -16,8 +14,8 @@ NOVERLAP = 353
 
 class Sample:
 
-    def __init__(self, use, uid, fpath):
-        self.dev = DEV_MAP[use]
+    def __init__(self, dev, uid, fpath=None):
+        self.dev = dev
         self.uid = uid
         self.fpath = fpath
         self.rate = None
@@ -26,6 +24,13 @@ class Sample:
 
     def to_list(self):
         return [self.dev, self.uid, self.spec]
+
+    @staticmethod
+    def from_list(obj):
+        dev, uid, spec = obj
+        self = Sample(dev, uid)
+        self.spec = spec
+        return self
 
     def load(self):
         self.rate, self.data = scipy.io.wavfile.read(self.fpath)
