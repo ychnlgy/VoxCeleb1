@@ -47,3 +47,4 @@ class Sample:
         )
         real = spec[:NPERSEG//2]
         self.spec = numpy.log10(1+real)
+        self.data = None  # release memory
