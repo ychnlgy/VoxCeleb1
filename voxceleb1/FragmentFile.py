@@ -12,7 +12,7 @@ class FragmentFile:
             items = self.itemize(arr)
             numpy.save(f, len(items))
             for item in tqdm.tqdm(items, desc="Saving to %s" % self.fpath):
-                numpy.save(f, item)
+                numpy.save(f, numpy.array(item, dtype=object))
 
     def load(self):
         with open(self.fpath, "rb") as f:
