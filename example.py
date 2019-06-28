@@ -1,6 +1,5 @@
 import argparse
-
-from matplotlib import pyplot
+import statistics
 
 from voxceleb1 import load
 
@@ -12,12 +11,14 @@ if __name__ == "__main__":
 
     samples = list(load(args.file))
 
-    try:
-        for sample in samples:
-            print(sample.dev, sample.uid, sample.spec.shape)
+    print("Number of samples:", len(samples))
+    print("Features:", samples[0].spec.shape[0])
 
-        for sample in samples:
-            pyplot.imshow(sample.spec[:,:300])
-            pyplot.show()
-    except KeyboardInterrupt:
-        pass
+    lengths = [sample.spec.shape[1] for sample in samples]
+    miu = statistics.mean(lengths)
+    std = statistics.stdev(lengths)
+    low = min(lengths)
+    hgh = max(lengths)
+    print("Mean/std length: %.1f/%.1f" % (miu, std))
+    print("Min/max length: %d/%d" % (low, hgh))
+    
