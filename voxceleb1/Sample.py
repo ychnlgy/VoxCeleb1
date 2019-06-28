@@ -46,5 +46,5 @@ class Sample:
             noverlap=NOVERLAP
         )
         real = spec[:NPERSEG//2]
-        self.spec = numpy.log10(1+real)
+        self.spec = numpy.log10(1+real).astype(numpy.float16)
         self.data = None  # release memory
