@@ -1,7 +1,7 @@
-from .ChunkFile import ChunkFile
-from .Sample import Sample
+from . import utils
+from . import preprocess
 
 
 def load(fpath):
-    cfile = ChunkFile(fpath)
-    return map(Sample.from_list, cfile.load())
+    cfile = utils.ChunkFile(fpath)
+    return map(preprocess.Sample.from_list, cfile.load())

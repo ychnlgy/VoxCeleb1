@@ -1,4 +1,4 @@
-from .ChunkFile import ChunkFile
+from ..utils.ChunkFile import ChunkFile
 
 
 def save(outfile, save_chunk_size, samples):
