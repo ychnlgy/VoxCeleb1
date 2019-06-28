@@ -14,7 +14,7 @@ NOVERLAP = 353
 
 class Sample:
 
-    def __init__(self, dev, uid, fpath=None):
+    def __init__(self, dev, uid, fpath):
         self.dev = dev
         self.uid = uid
         self.fpath = fpath
@@ -23,12 +23,12 @@ class Sample:
         self.spec = None
 
     def to_list(self):
-        return [self.dev, self.uid, self.spec]
+        return [self.dev, self.uid, self.spec, self.fpath]
 
     @staticmethod
     def from_list(obj):
-        dev, uid, spec = obj
-        self = Sample(dev, uid)
+        dev, uid, spec, fpath = obj
+        self = Sample(dev, uid, fpath)
         self.spec = spec
         return self
 
