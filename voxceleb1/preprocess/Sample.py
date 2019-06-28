@@ -14,23 +14,20 @@ NOVERLAP = 353
 
 class Sample:
 
-    def __init__(self, dev, uid, fpath):
+    def __init__(self, dev, uid, fpath, spec=None):
         self.dev = dev
         self.uid = uid
         self.fpath = fpath
-        self.rate = None
+        self.spec = spec
+        self.rate = EXPECTED_RATE
         self.data = None
-        self.spec = None
 
     def to_list(self):
-        return [self.dev, self.uid, self.spec, self.fpath]
+        return [self.dev, self.uid, self.fpath, self.spec]
 
     @staticmethod
     def from_list(obj):
-        dev, uid, spec, fpath = obj
-        self = Sample(dev, uid, fpath)
-        self.spec = spec
-        return self
+        return Sample(*obj)
 
     def load(self):
         self.rate, self.data = scipy.io.wavfile.read(self.fpath)
