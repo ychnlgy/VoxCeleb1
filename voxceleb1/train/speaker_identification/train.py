@@ -1,4 +1,5 @@
 import sys
+import os
 
 import torch
 import tqdm
@@ -7,31 +8,33 @@ from .DataProducer import DataProducer
 
 import voxceleb1
 
-def train(params, dataset, model, log):
-    producer = DataProducer(params.slice_size, dataset)
-
-    model = torch.nn.DataParallel(model)
+def train(config, producer, original_model, log):
+    if os.path.isfile(config.modelf):
+        log.write("Model already trained on speaker identification here: %s" % config.modelf)
+        original_model.load_state_dict(torch.load(config.modelf))
+    
+    model = torch.nn.DataParallel(original_model)
     lossf = torch.nn.CrossEntropyLoss()
     optim = torch.optim.SGD(
         model.parameters(),
-        lr=params.speaker_identification_lr,
+        lr=config.lr,
         momentum=0.9,
-        weight_decay=params.speaker_identification_weight_decay
+        weight_decay=config.weight_decay
     )
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(
-        optim, T_max=params.speaker_identification_epochs
+        optim, T_max=config.epochs
     )
 
     avg = voxceleb1.utils.MovingAverage(momentum=0.95)
 
-    for epoch in range(params.speaker_identification_epochs):
+    for epoch in range(config.epochs):
 
         data, test = producer.produce()
         dataloader = voxceleb1.utils.tensor_tools.create_loader(
-            data, batch_size=params.batch_size, shuffle=True
+            data, batch_size=config.batch_size, shuffle=True
         )
         testloader = voxceleb1.utils.tensor_tools.create_loader(
-            test, batch_size=params.batch_size*2
+            test, batch_size=config.batch_size*2
         )
         
         model.train()
@@ -64,3 +67,7 @@ def train(params, dataset, model, log):
             acc = correct / n * 100.0
 
             log.write("Epoch %d accuracy: %.2f" % (epoch, acc))
+
+    torch.save(original_model.state_dict(), config.modelf)
+    log.write("Saved model to %s" % config.modelf)
+    return original_model

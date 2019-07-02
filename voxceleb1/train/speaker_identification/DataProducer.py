@@ -12,6 +12,9 @@ class DataProducer:
         self.remapper = ReMapper()
         self.dt = slice_size
         self.dataset = dataset
+
+    def len_unique_labels(self):
+        return len(self.remapper)
     
     def produce(self):
         """Constructs training and testing sets from the input Dataset.
@@ -52,5 +55,3 @@ class DataProducer:
         X = [s.spec.astype(numpy.float32) for s in samples]
         Y = [self.remapper[s.uid] for s in samples]
         return X, Y
-
-    
