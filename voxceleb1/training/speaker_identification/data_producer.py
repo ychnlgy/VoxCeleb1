@@ -45,7 +45,7 @@ class DataProducer:
     def _rand_select_input(self, samples):
         inputs, Y = self._collect_input(samples)
         slices = list(map(self._rand_sample, inputs))
-        X = torch.from_numpy(numpy.array(slices)).float()
+        X = torch.from_numpy(numpy.array(slices)).float().unsqueeze(1)
         Y = torch.from_numpy(numpy.array(Y)).long()
         return X, Y
 
