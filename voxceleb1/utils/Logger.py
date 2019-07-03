@@ -1,5 +1,6 @@
 import sys
 import time
+import traceback
 
 from .format_time import format_time
 
@@ -12,14 +13,15 @@ class Logger:
 
     def __enter__(self):
         self.fout = open(self.fpath, "a")
-        self.write("======== INIT ========")
+        self.write("======== START ========")
         return self
 
     def __exit__(self, typ, val, tb):
+        state = "successful"
         if typ is not None:
-            self.write(str(tb))
-            self.write("%s: exit code %s" % (typ.__name__, val))
-        self.write("======== EXIT ========")
+            self.write("ERROR:\n%s" % traceback.format_exc())
+            state = "error encountered"
+        self.write("======== EXIT: %s ========" % state)
         self.fout.close()
 
     def write(self, msg, end="\n"):
