@@ -12,9 +12,14 @@ class Logger:
 
     def __enter__(self):
         self.fout = open(self.fpath, "a")
+        self.write("======== INIT ========")
         return self
 
-    def __exit__(self, *args):
+    def __exit__(self, typ, val, tb):
+        if typ is not None:
+            self.write(str(tb))
+            self.write("%s: exit code %s" % (typ.__name__, val))
+        self.write("======== DONE ========")
         self.fout.close()
 
     def write(self, msg, end="\n"):
