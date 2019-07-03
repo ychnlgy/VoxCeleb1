@@ -12,6 +12,9 @@ def train(config, producer, original_model, log):
         original_model.load_state_dict(torch.load(config.modelf))
         return original_model
 
+    params = voxceleb1.utils.tensor_tools.param_count(original_model)
+    log.write("Model parameters: %d" % params)
+
     if torch.cuda.is_available():
         device = "gpu"
         model = torch.nn.DataParallel(original_model.to(device))
