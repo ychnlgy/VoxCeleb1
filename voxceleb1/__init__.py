@@ -1,3 +1,5 @@
+from . import preprocess
+from . import training
+
 from .load import load
-from .preprocess import preprocess
 from .train import train
