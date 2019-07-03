@@ -12,6 +12,7 @@ def train(config, producer, original_model, log):
     if os.path.isfile(config.modelf):
         log.write("Model already trained on speaker identification here: %s" % config.modelf)
         original_model.load_state_dict(torch.load(config.modelf))
+        return original_model
     
     model = torch.nn.DataParallel(original_model)
     lossf = torch.nn.CrossEntropyLoss()
@@ -67,6 +68,10 @@ def train(config, producer, original_model, log):
             acc = correct / n * 100.0
 
             log.write("Epoch %d accuracy: %.2f" % (epoch, acc))
+
+    dpath = os.path.dirname(config.modelf)
+    if not os.path.isdir(dpath):
+        os.makedirs(dpath)
 
     torch.save(original_model.state_dict(), config.modelf)
     log.write("Saved model to %s" % config.modelf)

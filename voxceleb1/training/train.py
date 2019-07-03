@@ -3,13 +3,14 @@
 
 from . import speaker_identification
 from . import speaker_distance
-from .config import Config
 
 import voxceleb1
 
 def train(speaker_id_config_path, samples, log_path):
     with voxceleb1.utils.Logger(log_path) as log:
-        speaker_id_config = Config(speaker_id_config_path)
+        speaker_id_config = speaker_identification.Config(
+            speaker_id_config_path
+        )
         log.write(str(speaker_id_config))
 
         dataset = speaker_identification.Dataset.create(samples)
@@ -20,7 +21,7 @@ def train(speaker_id_config_path, samples, log_path):
             speaker_id_config.latent_size,
             speaker_id_producer.len_unique_labels()
         )
-        log.write(str(model))
+        log.write("Architecture:\n%s" % str(model))
 
-        speaker_identification.train(config, speaker_id_producer, model, log)
-        speaker_distance.train(config, dataset, model, log)
+        speaker_identification.train(speaker_id_config, speaker_id_producer, model, log)
+        speaker_distance.train(None, dataset, model, log)

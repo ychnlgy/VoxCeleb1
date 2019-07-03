@@ -1,0 +1,1 @@
+{"path": "config/one-class-v1.json", "slice_size": 300, "model": "one-class", "modelf": "parameters/one-class-v1.torch", "latent_size": 512, "lr": 0.01, "weight_decay": 1e-05, "epochs": 30, "batch_size": 64, "_dob": "2019-07-03-14:51:17"}

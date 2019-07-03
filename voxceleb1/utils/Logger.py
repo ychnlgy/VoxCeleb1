@@ -1,6 +1,7 @@
 import sys
 import time
 
+from .format_time import format_time
 
 class Logger:
 
@@ -18,14 +19,7 @@ class Logger:
 
     def write(self, msg, end="\n"):
         tm = time.localtime()
-        prefix = "[{}-{:0>2}-{:0>2}-{:0>2}:{:0>2}:{:0>2}] ".format(
-            tm.tm_year,
-            tm.tm_mon,
-            tm.tm_mday,
-            tm.tm_hour,
-            tm.tm_min,
-            tm.tm_sec
-        )
+        prefix = "[%s] " % format_time()
         msg = prefix + msg + end
         self.fout.write(msg)
         self.pout.write(msg)
