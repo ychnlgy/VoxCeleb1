@@ -3,7 +3,7 @@ import random
 import numpy
 import torch
 
-from .ReMapper import ReMapper
+from .remapper import ReMapper
 
 
 class DataProducer:

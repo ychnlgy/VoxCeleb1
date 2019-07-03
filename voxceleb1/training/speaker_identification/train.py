@@ -4,8 +4,6 @@ import os
 import torch
 import tqdm
 
-from .DataProducer import DataProducer
-
 import voxceleb1
 
 def train(config, producer, original_model, log):
