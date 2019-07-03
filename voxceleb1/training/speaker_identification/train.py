@@ -45,7 +45,7 @@ def train(config, producer, original_model, log):
         model.train()
 
         with tqdm.tqdm(dataloader, ncols=80) as bar:
-            for X, Y in dataloader:
+            for X, Y in bar:
                 X = X.to(device)
                 Y = Y.to(device)
                 
