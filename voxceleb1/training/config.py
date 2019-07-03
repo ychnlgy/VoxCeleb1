@@ -41,7 +41,6 @@ class Config:
             return json.load(f)
 
     def _str_params(self):
-        print(self.param_dict)
         return "\n\t".join(
             " = ".join([k, str(v)])
             for k, v in sorted(self.param_dict.items())
