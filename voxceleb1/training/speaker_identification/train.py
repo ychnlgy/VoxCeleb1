@@ -62,19 +62,20 @@ def train(config, producer, original_model, log):
 
         with torch.no_grad():
 
-            correct = n = 0.0
+            acc = correct = n = 0.0
 
-            for X, Y in testloader:
+            if len(testloader):
+                for X, Y in testloader:
 
-                X = X.to(device)
-                Y = Y.to(device)
+                    X = X.to(device)
+                    Y = Y.to(device)
 
-                Yh = model(X)
-                _, pred = Yh.max(dim=1)
-                correct += (pred == Y).long().sum().item()
-                n += len(Y)
+                    Yh = model(X)
+                    _, pred = Yh.max(dim=1)
+                    correct += (pred == Y).long().sum().item()
+                    n += len(Y)
 
-            acc = correct / n * 100.0
+                acc = correct / n * 100.0
 
             log.write("Epoch %d accuracy: %.2f" % (epoch, acc))
 
