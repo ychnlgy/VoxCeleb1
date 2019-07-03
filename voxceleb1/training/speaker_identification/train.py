@@ -11,8 +11,14 @@ def train(config, producer, original_model, log):
         log.write("Model already trained on speaker identification here: %s" % config.modelf)
         original_model.load_state_dict(torch.load(config.modelf))
         return original_model
-    
-    model = torch.nn.DataParallel(original_model)
+
+    if torch.cuda.is_available():
+        device = "gpu"
+        model = torch.nn.DataParallel(original_model.to(device))
+    else:
+        device = "cpu"
+        model = original_model
+
     lossf = torch.nn.CrossEntropyLoss()
     optim = torch.optim.SGD(
         model.parameters(),
@@ -40,7 +46,9 @@ def train(config, producer, original_model, log):
 
         with tqdm.tqdm(dataloader, ncols=80) as bar:
             for X, Y in dataloader:
-
+                X = X.to(device)
+                Y = Y.to(device)
+                
                 Yh = model(X)
                 loss = lossf(Yh, Y)
                 optim.zero_grad()
@@ -58,6 +66,9 @@ def train(config, producer, original_model, log):
 
             for X, Y in testloader:
 
+                X = X.to(device)
+                Y = Y.to(device)
+
                 Yh = model(X)
                 _, pred = Yh.max(dim=1)
                 correct += (pred == Y).long().sum().item()
@@ -71,6 +82,6 @@ def train(config, producer, original_model, log):
     if not os.path.isdir(dpath):
         os.makedirs(dpath)
 
-    torch.save(original_model.state_dict(), config.modelf)
+    torch.save(original_model.to("cpu").state_dict(), config.modelf)
     log.write("Saved model to %s" % config.modelf)
     return original_model
