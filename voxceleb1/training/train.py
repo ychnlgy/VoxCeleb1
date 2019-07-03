@@ -9,8 +9,8 @@ from ..config import Config
 
 import voxceleb1
 
-def train(speaker_id_config_path, samples, logpath):
-    log = voxceleb1.utils.Logger(logpath)
+def train(speaker_id_config_path, samples, log_path):
+    log = voxceleb1.utils.Logger(log_path)
     
     speaker_id_config = Config(speaker_id_config_path)
     log.write(str(speaker_id_config))

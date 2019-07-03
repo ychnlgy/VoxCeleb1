@@ -14,9 +14,10 @@ class FragmentFile:
             for item in tqdm.tqdm(items, desc="Saving to %s" % self.fpath):
                 numpy.save(f, numpy.array(item, dtype=object))
 
-    def load(self):
+    def load(self, max_n=None):
         with open(self.fpath, "rb") as f:
-            n = numpy.load(f).item()
+            total = numpy.load(f).item()
+            n = total if max_n is None else min(total, max_n)
             items = range(n)
             for _ in tqdm.tqdm(items, desc="Loading from %s" % self.fpath):
                 for obj in self.process(numpy.load(f)):

@@ -11,4 +11,12 @@ class Config:
         return self.param_dict[key]
 
     def __str__(self):
-        return "<Config: %s>" % self.param_path
+        return "<config: %s>\n\t%s\n</config>" % (
+            self.param_path, self.str_params()
+        )
+
+    def str_params(self):
+        return "\n\t".join(
+            " = ".join(item)
+            for item in sorted(self.param_dict.items())
+        )
