@@ -42,6 +42,6 @@ class Config:
 
     def _str_params(self):
         return "\n\t".join(
-            " = ".join(item)
-            for item in sorted(self.param_dict.items())
+            " = ".join([key, self.param_dict[key]])
+            for key in sorted(self.param_dict.keys())
         )
