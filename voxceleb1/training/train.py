@@ -5,8 +5,6 @@ from . import speaker_identification
 from . import speaker_distance
 from .config import Config
 
-import voxceleb1
-
 def train(speaker_id_config_path, samples, log):
     speaker_id_config = Config(
         speaker_id_config_path
