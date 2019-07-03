@@ -19,7 +19,7 @@ class Logger:
         if typ is not None:
             self.write(str(tb))
             self.write("%s: exit code %s" % (typ.__name__, val))
-        self.write("======== DONE ========")
+        self.write("======== EXIT ========")
         self.fout.close()
 
     def write(self, msg, end="\n"):
