@@ -37,6 +37,7 @@ class _BaseModel(abc.ABC, torch.nn.Module):
 class _OneClassModule(torch.nn.Module):
 
     def __init__(self, unique_labels):
+        super().__init__()
         self.params = torch.nn.Parameter(
             torch.rand(1, unique_labels)
         )
