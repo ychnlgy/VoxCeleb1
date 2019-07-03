@@ -35,6 +35,8 @@ def train(config, producer, original_model, log):
 
     avg = voxceleb1.utils.MovingAverage(momentum=0.95)
 
+    log.write("Begin training...")
+
     for epoch in range(config.epochs):
 
         data, test = producer.produce()
