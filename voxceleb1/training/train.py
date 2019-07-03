@@ -15,7 +15,10 @@ def train(speaker_id_config_path, samples, log_path):
         log.write(str(speaker_id_config))
 
         dataset = speaker_identification.Dataset.create(samples)
-        speaker_id_producer = DataProducer(speaker_id_config.slice_size, dataset)
+        speaker_id_producer = speaker_identification.DataProducer(
+            speaker_id_config.slice_size,
+            dataset
+        )
         model = speaker_identification.search_model(
             speaker_id_config.model,
             dataset.features,
