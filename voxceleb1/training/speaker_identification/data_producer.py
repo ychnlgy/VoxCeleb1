@@ -12,6 +12,7 @@ class DataProducer:
         self.remapper = ReMapper()
         self.dt = slice_size
         self.dataset = dataset
+        self._setup_remapper()
 
     def len_unique_labels(self):
         return len(self.remapper)
@@ -35,6 +36,11 @@ class DataProducer:
         return data, test
 
     # === PRIVATE ===
+
+    def _setup_remapper(self):
+        for sample in self.dataset.data:
+            self.remapper[sample.uid]
+        self.remapper.freeze()
 
     def _rand_select_input(self, samples):
         inputs, Y = self._collect_input(samples)

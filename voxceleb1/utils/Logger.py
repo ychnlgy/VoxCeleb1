@@ -17,16 +17,17 @@ class Logger:
         return self
 
     def __exit__(self, typ, val, tb):
-        state = "successful"
+        state = "success"
         if typ is not None:
-            self.write("ERROR:\n%s" % traceback.format_exc())
-            state = "error encountered"
+            self.write("ERROR:\n%s" % traceback.format_exc(), silent=True)
+            state = "crashed"
         self.write("======== EXIT: %s ========" % state)
         self.fout.close()
 
-    def write(self, msg, end="\n"):
+    def write(self, msg, end="\n", silent=False):
         tm = time.localtime()
         prefix = "[%s] " % format_time()
         msg = prefix + msg + end
         self.fout.write(msg)
-        self.pout.write(msg)
+        if not silent:
+            self.pout.write(msg)

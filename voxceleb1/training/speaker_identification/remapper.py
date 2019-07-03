@@ -12,3 +12,11 @@ class ReMapper:
         else:
             self._map[key] = val = len(self._map)
             return val
+
+    def freeze(self):
+        self.__getitem__ = self._frozen_getitem
+
+    # === PRIVATE ===
+
+    def _frozen_getitem(self, key):
+        return self._map[key]
