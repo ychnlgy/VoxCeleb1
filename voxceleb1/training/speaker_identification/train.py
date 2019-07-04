@@ -8,7 +8,11 @@ import voxceleb1
 
 def train(config, producer, original_model, log):
     if os.path.isfile(config.modelf):
-        log.write("Model already trained on speaker identification here: %s" % config.modelf)
+        log.write(
+            "Model already trained " \
+            "on speaker identification here: " \
+            "%s" % config.modelf
+        )
         original_model.load_state_dict(torch.load(config.modelf))
         return original_model
 
@@ -22,20 +26,27 @@ def train(config, producer, original_model, log):
         device = "cpu"
         model = original_model
 
+    log.write("Using device: %s" % device)
+
     lossf = torch.nn.CrossEntropyLoss()
+    log.write("Loss function: %s" % lossf)
+    
     optim = torch.optim.SGD(
         model.parameters(),
         lr=config.lr,
         momentum=0.9,
         weight_decay=config.weight_decay
     )
+    log.write("Optimizer:\n%s" % optim)
+    
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(
         optim, T_max=config.epochs
     )
+    log.write("Learning rate scheduler: %s" % sched)
 
     avg = voxceleb1.utils.MovingAverage(momentum=0.95)
 
-    log.write("Begin training...")
+    log.write("Began training...")
 
     for epoch in range(config.epochs):
 

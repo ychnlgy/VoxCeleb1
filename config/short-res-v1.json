@@ -1,1 +1,1 @@
-{"path": "config/short-res-v1.json", "slice_size": 300, "model": "short-res", "modelf": "parameters/short-res-v1.torch", "latent_size": 512, "lr": 0.01, "weight_decay": 1e-05, "epochs": 30, "batch_size": 64, "_dob": "2019-07-04-12:22:01"}
+{"seed": 5, "path": "config/short-res-v1.json", "slice_size": 300, "model": "short-res", "modelf": "parameters/short-res-v1.torch", "latent_size": 512, "lr": 0.01, "weight_decay": 1e-05, "epochs": 30, "batch_size": 64, "_dob": "2019-07-04-12:22:01"}

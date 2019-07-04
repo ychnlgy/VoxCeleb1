@@ -1,5 +1,3 @@
-import random
-
 import numpy
 import torch
 
@@ -8,10 +6,11 @@ from .remapper import ReMapper
 
 class DataProducer:
 
-    def __init__(self, slice_size, dataset):
+    def __init__(self, slice_size, dataset, random):
         self.remapper = ReMapper()
         self.dt = slice_size
         self.dataset = dataset
+        self.random = random
         self._setup_remapper()
 
     def len_unique_labels(self):
@@ -53,7 +52,7 @@ class DataProducer:
         """Assume input arr is of shape (freq, time)."""
         length = arr.shape[-1]
         assert length >= self.dt
-        start = random.randint(0, length-self.dt)
+        start = self.random.randint(0, length-self.dt)
         end = start + self.dt
         return arr[:, start:end]
 
