@@ -19,10 +19,12 @@ def iter_toy_samples(num_samples):
         for i in range(num_samples):
             uid = random.randint(1, total_subjects)
             yield preprocess.Sample.from_list(
-                dev=random.randint(0, 1),
-                uid=uid,
-                fpath=None,
-                spec=create_toy_spec(uid, random)
+                [
+                    random.randint(0, 1),
+                    uid,
+                    None,
+                    create_toy_spec(uid, random)
+                ]
             )
 
 def create_toy_spec(uid, random):
