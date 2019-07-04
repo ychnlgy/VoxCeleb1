@@ -8,7 +8,7 @@ FREQS = 256
 
 def train_toy(speaker_id_config_path, log_path, num_samples):
     with utils.Logger(log_path) as log:
-        log.write("Creating %d samples" % num_samples)
+        log.write("Creating %d samples." % num_samples)
         samples = list(iter_toy_samples(num_samples))
         training.train(speaker_id_config_path, samples, log)
 
@@ -29,6 +29,5 @@ def iter_toy_samples(num_samples):
 
 def create_toy_spec(uid, random):
     length = random.randint(330, 1500)
-    buf = numpy.zeros((FREQS, length))
-    buf[0, 0] = uid
+    buf = numpy.zeros((FREQS, length)) + uid
     return buf

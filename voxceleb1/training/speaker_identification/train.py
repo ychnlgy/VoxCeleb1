@@ -42,7 +42,7 @@ def train(config, producer, original_model, log):
     sched = torch.optim.lr_scheduler.CosineAnnealingLR(
         optim, T_max=config.epochs
     )
-    log.write("Learning rate scheduler: %s" % sched)
+    log.write("Learning rate scheduler:\n%s" % sched)
 
     avg = voxceleb1.utils.MovingAverage(momentum=0.95)
 
