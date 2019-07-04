@@ -6,7 +6,7 @@ from . import training
 
 FREQS = 256
 
-def toy_train(speaker_id_config_path, data_path, log_path, num_samples):
+def train_toy(speaker_id_config_path, data_path, log_path, num_samples):
     with utils.Logger(log_path) as log:
         log.write("Creating %d samples" % num_samples)
         samples = list(iter_toy_samples(num_samples))
