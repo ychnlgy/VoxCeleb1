@@ -20,7 +20,7 @@ def train(config, producer, original_model, log):
     log.write("Model parameters: %d" % params)
 
     if torch.cuda.is_available():
-        device = "gpu"
+        device = "cuda"
         model = torch.nn.DataParallel(original_model.to(device))
     else:
         device = "cpu"
