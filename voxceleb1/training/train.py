@@ -7,7 +7,7 @@ from .config import Config
 
 from .. import utils
 
-def train(speaker_id_config_path, samples, log):
+def train(speaker_id_config_path, speaker_dist_config_path, samples, log):
     speaker_id_config = Config(
         speaker_id_config_path
     )
@@ -39,5 +39,8 @@ def train(speaker_id_config_path, samples, log):
             model,
             log
         )
-        
-        speaker_distance.train(None, dataset, model, log)
+
+        speaker_dist_config = Config(
+            speaker_dist_config_path
+        )
+        speaker_distance.train(speaker_dist_config, dataset, model, log)

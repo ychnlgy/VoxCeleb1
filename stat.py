@@ -1,4 +1,5 @@
 import argparse
+import collection
 import statistics
 
 from voxceleb1 import load
@@ -21,4 +22,10 @@ if __name__ == "__main__":
     hgh = max(lengths)
     print("Mean/std length: %.1f/%.1f" % (miu, std))
     print("Min/max length: %d/%d" % (low, hgh))
+
+    counter = collection.Counter()
+    for sample in samples:
+        counter[sample.uid] += 1
+    min_person_set = min(counter.values())
+    print("Minimum person-specific samples:", min_person_set)
     
