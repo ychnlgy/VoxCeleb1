@@ -1,5 +1,7 @@
 import numpy
 
+import voxceleb1
+
 
 class Dataset:
 
@@ -22,6 +24,7 @@ class Dataset:
         self._normalize()
 
     def _normalize(self):
+        self.log.write("Computing mean/std for the spectrogram filters")
         miu, std = self._compute_stats(self.data)
         self.log.write(
             "Applying normalization to the training and testing sets"
@@ -30,13 +33,10 @@ class Dataset:
         self._apply_normal(self.test, miu, std)
 
     def _compute_stats(self, samples):
-        specs = [s.spec for s in samples]
-        self.log.write("Combining all spectrograms")
-        stacked = numpy.concatenate(specs, axis=-1)
-        self.log.write("Computing mean/var of all spectrograms")
-        miu = stacked.mean(axis=-1).reshape(-1, 1)
-        std = stacked.std(axis=-1).reshape(-1, 1) + self.eps
-        return miu, std
+        stat = voxceleb1.utils.BatchStat(axis=-1)
+        for sample in samples:
+            stat.update(sample.spec)
+        return stat.peek()
 
     def _apply_normal(self, samples, miu, std):
         for sample in samples:

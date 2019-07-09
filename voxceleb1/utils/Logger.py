@@ -32,3 +32,4 @@ class Logger:
         self.fout.flush()
         if not silent:
             self.pout.write(msg)
+            self.pout.flush()
