@@ -23,7 +23,7 @@ if __name__ == "__main__":
     print("Mean/std length: %.1f/%.1f" % (miu, std))
     print("Min/max length: %d/%d" % (low, hgh))
 
-    counter = collection.Counter()
+    counter = collections.Counter()
     for sample in samples:
         counter[sample.uid] += 1
     min_person_set = min(counter.values())
