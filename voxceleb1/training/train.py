@@ -19,12 +19,14 @@ def train(speaker_id_config_path, speaker_dist_config_path, samples, log):
             "%d" % speaker_id_config.seed
         )
 
-        dataset = speaker_identification.Dataset.create(samples)
+        dataset = speaker_identification.Dataset.create(samples, log)
         speaker_id_producer = speaker_identification.DataProducer(
             speaker_id_config.slice_size,
             dataset,
             random
         )
+
+        log.write("Instantiating model")
         model = speaker_identification.search_model(
             speaker_id_config.model,
             dataset.features,
