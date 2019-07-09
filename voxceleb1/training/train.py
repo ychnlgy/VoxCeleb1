@@ -46,7 +46,7 @@ def train(speaker_id_config_path, speaker_dist_config_path, samples, log):
             speaker_dist_config_path
         )
         speaker_dist_producer = speaker_distance.SubjectDataProducer(
-            num_samples=speaker_dist_config.num_samples,
+            speaker_dist_config.num_samples,
             speaker_id_config.slice_size,
             dataset,
             random
