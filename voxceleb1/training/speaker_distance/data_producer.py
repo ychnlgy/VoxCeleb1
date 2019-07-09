@@ -13,7 +13,12 @@ class SubjectDataProducer(speaker_identification.DataProducer):
         """Return training and testing sets for metric learning.
 
         Output :
-        data_subj : torch Tensor of shape (P, K, 1, W, H), 
+        data_subj : torch Tensor of shape (P, K, 1, f, t), where
+            P is the number of unique subjects, K is self.num_samples,
+            f is the frequency bands of the spectrogram and t is the
+            number of samples along time.
+        test_subj : torch Tensor of shape (P', K, 1, f, t), where P'
+            is the number of unique subjects in the test set.
         """
         data, test = self.produce()
         data_subj = self._sample_subjects(*data)
