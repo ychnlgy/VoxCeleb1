@@ -22,7 +22,7 @@ class Dataset:
         self.log = log
         self.eps = eps
 
-        self._normalize()
+        #self._normalize()
 
     def _normalize(self):
         self.log.write("Computing mean/std for the spectrogram filters")
