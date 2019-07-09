@@ -43,4 +43,10 @@ def train(speaker_id_config_path, speaker_dist_config_path, samples, log):
         speaker_dist_config = Config(
             speaker_dist_config_path
         )
-        speaker_distance.train(speaker_dist_config, dataset, model, log)
+        speaker_distance.train(
+            speaker_id_config,
+            speaker_dist_config,
+            dataset,
+            model,
+            log
+        )

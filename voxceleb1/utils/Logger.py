@@ -29,5 +29,6 @@ class Logger:
         prefix = "[%s] " % format_time()
         msg = prefix + msg + end
         self.fout.write(msg)
+        self.fout.flush()
         if not silent:
             self.pout.write(msg)
