@@ -1,6 +1,7 @@
 from . import neuron
 from . import preprocess
 from . import training
+from . import utils
 
 from .load import load
 from .train import train
