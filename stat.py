@@ -1,5 +1,5 @@
 import argparse
-import collection
+import collections
 import statistics
 
 from voxceleb1 import load

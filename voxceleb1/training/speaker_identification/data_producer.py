@@ -29,6 +29,9 @@ class DataProducer:
             (torch FloatTensor X_data, torch LongTensor Y_data),
             (torch FloatTensor X_test, torch LongTensor Y_test)
         ) : training and test sets and corresponding labels.
+            X_data is of shape (N, 1, f, t), where N is the total
+            number of samples in the training set, t is the time
+            length of the spectrogram (i.e. time) and H is the height 
         """
         data = self._rand_select_input(self.dataset.data)
         test = self._rand_select_input(self.dataset.test)
