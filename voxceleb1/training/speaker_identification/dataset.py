@@ -1,4 +1,5 @@
 import numpy
+import tqdm
 
 import voxceleb1
 
@@ -26,18 +27,17 @@ class Dataset:
     def _normalize(self):
         self.log.write("Computing mean/std for the spectrogram filters")
         miu, std = self._compute_stats(self.data)
-        self.log.write(
-            "Applying normalization to the training and testing sets"
-        )
+        self.log.write("Normalizing training set")
         self._apply_normal(self.data, miu, std)
+        self.log.write("Normalizing testing set")
         self._apply_normal(self.test, miu, std)
 
     def _compute_stats(self, samples):
         stat = voxceleb1.utils.BatchStat(axis=-1)
-        for sample in samples:
+        for sample in tqdm.tqdm(samples, desc="Compute stats", ncols=80):
             stat.update(sample.spec)
         return stat.peek()
 
     def _apply_normal(self, samples, miu, std):
-        for sample in samples:
+        for sample in tqdm.tqdm(samples, desc="Normalizing", ncols=80):
             sample.spec = (sample.spec - miu) / std
