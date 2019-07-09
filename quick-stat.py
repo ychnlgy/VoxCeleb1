@@ -9,8 +9,6 @@ if __name__ == "__main__":
     parser.add_argument("--file", required=True)
     args = parser.parse_args()
 
-    
-
     counter = collections.Counter()
     for sample in load(args.file):
         counter[sample.uid] += 1
