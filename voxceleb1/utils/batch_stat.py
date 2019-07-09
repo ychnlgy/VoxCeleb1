@@ -9,6 +9,9 @@ class BatchStat:
         self.n = 0
         self.axis = axis
 
+    def __len__(self):
+        return self.n
+
     def update(self, x):
         """Update statistics given the batch item.
 
@@ -17,8 +20,13 @@ class BatchStat:
         """
         n = x.shape[self.axis]
         miu = x.mean(axis=self.axis)
+        var = x.var(axis=self.axis)
+        self.update_stat(miu, var, n)
+
+    def update_stat(self, miu, var, n):
         new_n = self.n + n
-        self.var = self._calc_var(x, miu, n, new_n)
+        # Note: must update variance before mean!
+        self.var = self._calc_var(var, miu, n, new_n)
         self.miu = self._calc_miu(miu, n, new_n)
         self.n = new_n
 
@@ -30,8 +38,7 @@ class BatchStat:
 
     # === PRIVATE ===
 
-    def _calc_var(self, x, miu, n, new_n):
-        var = x.var(axis=self.axis)
+    def _calc_var(self, var, miu, n, new_n):
         pvar1 = n / new_n * var
         pvar2 = self.n / new_n * self.var
         fmean = n * self.n / (n + self.n)**2 * (miu - self.miu)**2
