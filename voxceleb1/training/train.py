@@ -40,6 +40,7 @@ def train(speaker_id_config_path, speaker_dist_config_path, samples, log):
             log
         )
 
+        raise NotImplementedError
         speaker_dist_config = Config(
             speaker_dist_config_path
         )
