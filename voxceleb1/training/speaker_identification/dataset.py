@@ -29,11 +29,11 @@ class Dataset(torch.utils.data.Dataset):
         sample = self._data[idx]
         spec, uid = sample.spec, sample.uid
         spec = torch.from_numpy(spec).float()
-        dt = spec.size(-1)
+        dt = spec.shape[-1]
         i = self._rand.randint(0, dt - self._size)
         j = i + self._size
         X = (spec[:, i:j] - self._miu) / self._std
-        return X, uid
+        return torch.from_numpy(X).float(), uid
         
 ##class Dataset:
 ##
