@@ -6,4 +6,5 @@ from .format_time import format_time
 from .Logger import Logger
 from .MovingAverage import MovingAverage
 from .seed_bubble import SeedBubble
+from .top_class_predictor import TopClassPredictor
 from .worker_manager import WorkerManager

@@ -67,6 +67,8 @@ def train(config, dataset, testset, cores, original_model, log):
 
     for epoch in range(config.epochs):
 
+        scorer = voxceleb1.utils.TopClassPredictor(top_ks=[1, 5])
+        
         model.train()
 
         with tqdm.tqdm(dataloader, ncols=80) as bar:
@@ -83,27 +85,16 @@ def train(config, dataset, testset, cores, original_model, log):
                 avg.update(loss.item())
                 bar.set_description("Loss %.4f" % avg.peek())
 
-        model.eval()
+                scorer.update(Yh, Y)
 
-        with torch.no_grad():
-
-            acc = correct = n = 0.0
-
-            if len(testloader):
-                for X, Y in testloader:
-
-                    X = X.to(device)
-                    Y = Y.to(device)
-
-                    Yh = model(X)
-                    _, pred = Yh.max(dim=1)
-                    correct += (pred == Y).long().sum().item()
-                    n += len(Y)
-
-                acc = correct / n * 100.0
-
-            log.write("Epoch %d accuracy: %.2f" % (epoch, acc))
-
+        top1, top5 = scorer.peek()
+        top1 *= 100.0
+        top5 *= 100.0
+        log.write(
+            "Epoch %d/%d training top-1/top-5 accuracy: " \
+            "%.2f%%/%.2f%%" % (epoch+1, config.epochs, top1, top5)
+        )
+        
     dpath = os.path.dirname(config.modelf)
     if not os.path.isdir(dpath):
         os.makedirs(dpath)
