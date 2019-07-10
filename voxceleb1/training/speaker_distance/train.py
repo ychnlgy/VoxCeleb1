@@ -45,7 +45,7 @@ def train(config, producer, model, log):
 
         model.train()
 
-        for tqdm.tqdm(dataloader, ncols=80) as bar:
+        with tqdm.tqdm(dataloader, ncols=80) as bar:
             for X, _ in bar:
                 X = X.to(device)
                 features = model.extract(X)
