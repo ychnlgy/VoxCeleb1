@@ -7,7 +7,7 @@ from .loss import triplet_loss
 import voxceleb1
 
 
-def train(config, producer, model, log):
+def train(config, dataset, testset, cores, model, log):
 
     log.write("Part 2: metric learning")
     
@@ -26,7 +26,13 @@ def train(config, producer, model, log):
     else:
         device = "cpu"
 
-    # TODO!
+    dataloader = torch.utils.data.DataLoader(
+        dataset,
+        batch_size=config.batch_size,
+        shuffle=True,
+        num_workers=cores
+    )
+    
     testloader = torch.utils.data.DataLoader(
         testset,
         batch_size=config.batch_size*2,
@@ -53,7 +59,18 @@ def train(config, producer, model, log):
         model.train()
 
         with tqdm.tqdm(dataloader, ncols=80) as bar:
-            for X, _ in bar:
+            for X in bar:
                 X = X.to(device)
                 features = model.extract(X)
                 loss = lossf(features)
+
+                optim.zero_grad()
+                loss.backward()
+                optim.step()
+
+                avg.update(loss.item())
+
+        model.eval()
+
+        with torch.no_grad():
+            

@@ -1,2 +1,2 @@
-from .data_producer import SubjectDataProducer
+from .dataset import Dataset
 from .train import train

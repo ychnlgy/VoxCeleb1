@@ -64,7 +64,7 @@ def train(
         )
         log.write("Architecture:\n%s" % str(model))
 
-        speaker_identification.train(
+        model = speaker_identification.train(
             speaker_id_config,
             dataset, testset,
             cores,
@@ -72,19 +72,42 @@ def train(
             log
         )
 
+        log.write("Removed tail of model")
         model.cut_tail()  # feature extraction only
 
-##        speaker_dist_config = Config(
-##            speaker_dist_config_path
-##        )
-##        speaker_dist_producer = speaker_distance.SubjectDataProducer(
-##            speaker_dist_config.num_samples,
-##            dataset,
-##            random
-##        )
-##        speaker_distance.train(
-##            speaker_dist_config,
-##            speaker_dist_producer,
-##            model,
-##            log
-##        )
+        speaker_dist_config = Config(
+            speaker_dist_config_path
+        )
+        log.write(str(speaker_dist_config))
+
+        log.write("Instantiating datasets for metric learning")
+        speaker_dist_dataset = speaker_distance.Dataset(
+            speaker_id_dataset=dataset,
+            num_samples=speaker_dist_config.num_samples,
+            total_subjects=len(remapper),
+            random=random
+        )
+        log.write(
+            "Number of training subjects: " \
+            "%d" % len(speaker_dist_dataset)
+        )
+
+        speaker_dist_testset = speaker_distance.Dataset(
+            speaker_id_dataset=testset,  # Note: here is the difference.
+            num_samples=speaker_dist_config.num_samples,
+            total_subjects=len(remapper),
+            random=random
+        )
+        log.write(
+            "Number of testing subjects: " \
+            "%d" % len(speaker_dist_testset)
+        )
+
+        model = speaker_distance.train(
+            speaker_dist_config,
+            speaker_dist_dataset,
+            speaker_dist_testset,
+            cores,
+            model,
+            log
+        )
