@@ -21,10 +21,13 @@ class Dataset(torch.utils.data.Dataset):
         self.features = self._data[0].spec.shape[0]
 
     def _filter_samples(self, samples):
+        out = []
         with self._remap.activate(lock=not self._dev):
             for s in tqdm.tqdm(samples, ncols=80, desc="Remapping uids"):
-                s.uid = self._remap[s.uid]
-        return [s for s in samples if bool(s.dev) == self._dev]
+                if bool(s.dev) == self._dev:
+                    s.uid = self._remap[s.uid]
+                    out.append(s)
+        return out
 
     def len_unique_labels(self):
         return len(self._remap)
