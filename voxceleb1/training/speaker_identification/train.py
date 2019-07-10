@@ -9,6 +9,9 @@ import torch.utils.data
 import voxceleb1
 
 def train(config, dataset, testset, cores, original_model, log):
+
+    log.write("Part 1: speaker identification")
+    
     if os.path.isfile(config.modelf):
         log.write(
             "Model already trained " \
@@ -17,6 +20,18 @@ def train(config, dataset, testset, cores, original_model, log):
         )
         original_model.load_state_dict(torch.load(config.modelf))
         return original_model
+
+    dataloader = torch.utils.data.DataLoader(
+        dataset,
+        batch_size=config.batch_size,
+        shuffle=True,
+        num_workers=cores
+    )
+    testloader = torch.utils.data.DataLoader(
+        testset,
+        batch_size=config.batch_size*2,
+        num_workers=cores
+    )
 
     params = voxceleb1.utils.tensor_tools.param_count(original_model)
     log.write("Model parameters: %d" % params)
@@ -52,17 +67,6 @@ def train(config, dataset, testset, cores, original_model, log):
 
     for epoch in range(config.epochs):
 
-        dataloader = torch.utils.data.DataLoader(
-            dataset,
-            batch_size=config.batch_size,
-            shuffle=True,
-            num_workers=cores
-        )
-        testloader = torch.utils.data.DataLoader(
-            testset,
-            batch_size=config.batch_size*2,
-            num_workers=cores
-        )
         model.train()
 
         with tqdm.tqdm(dataloader, ncols=80) as bar:

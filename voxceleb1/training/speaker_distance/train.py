@@ -8,6 +8,8 @@ import voxceleb1
 
 
 def train(config, producer, model, log):
+
+    log.write("Part 2: metric learning")
     
     if os.path.isfile(config.modelf):
         log.write(
