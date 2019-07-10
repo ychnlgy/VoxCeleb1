@@ -55,7 +55,7 @@ def train(
             speaker_id_config.model,
             dataset.features,
             speaker_id_config.latent_size,
-            speaker_id_producer.len_unique_labels()
+            dataset.len_unique_labels()
         )
         log.write("Architecture:\n%s" % str(model))
 
