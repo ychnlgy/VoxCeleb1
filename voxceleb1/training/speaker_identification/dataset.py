@@ -15,21 +15,22 @@ class Dataset(torch.utils.data.Dataset):
         self._rand = random
         self._miu = miu
         self._std = std
+        self._remap = remapper
         self._dev = bool(dev)
-        self._data = list(self._init_samples(samples, remapper))
+        self._data = self._filter_samples(samples)
 
-    def _init_samples(self, samples, remapper):
-        for s in tqdm.tqdm(samples, desc="Initializing samples", ncols=80):
-            if bool(s.dev) == self._dev:
-                spec = torch.from_numpy(s.spec).float()
-                uid = remapper[s.uid]
-                yield spec, uid
+    def _filter_samples(self, samples):
+        return [s for s in samples if bool(s.dev) == self._dev]
 
     def __len__(self):
         return len(self._data)
 
     def __getitem__(self, idx):
-        spec, uid = self._focus[idx]
+        sample = self._data[idx]  
+        spec, uid = sample.spec, sample.uid
+        spec = torch.from_numpy(spec).float()
+        with self._remap.activate(lock=~self._dev):
+            uid = self._remap[uid]
         dt = spec.size(-1)
         i = self._rand.randint(0, dt - self._size)
         j = i + self._size
