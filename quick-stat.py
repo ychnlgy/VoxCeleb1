@@ -20,7 +20,7 @@ if __name__ == "__main__":
     min_person_set = min(counter.values())
     print("Minimum person-specific samples:", min_person_set)
 
-    with open(args.save_stats, "rb") as f:
+    with open(args.save_stats, "wb") as f:
         miu, std = stats.peek()
         numpy.save(f, numpy.array([miu, std]))
     print("Saved mean/std to %s." % args.save_stats)
