@@ -69,8 +69,16 @@ def train(config, dataset, testset, cores, model, log):
                 optim.step()
 
                 avg.update(loss.item())
+                bar.set_description("Loss: %.4f" % avg.peek())
 
-        model.eval()
+        log.write("Epoch %d loss: %.4f" % (epoch, avg.peek()))
 
-        with torch.no_grad():
-            
+    dname = os.path.dirname(config.modelf)
+    if not os.path.isdir(dname):
+        os.makedirs(dname)
+        
+    model = model.cpu()
+    torch.save(model.state_dict(), config.modelf)
+    log.write("Saved model to %s" % config.modelf)
+    
+    return model

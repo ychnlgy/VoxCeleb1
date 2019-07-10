@@ -94,6 +94,6 @@ def train(config, dataset, testset, cores, original_model, log):
     if not os.path.isdir(dpath):
         os.makedirs(dpath)
 
-    torch.save(original_model.to("cpu").state_dict(), config.modelf)
+    torch.save(original_model.cpu().state_dict(), config.modelf)
     log.write("Saved model to %s" % config.modelf)
     return original_model
