@@ -4,7 +4,6 @@ import numpy
 from . import speaker_identification
 from . import speaker_distance
 from .config import Config
-from .remapper import ReMapper
 
 from .. import utils
 
@@ -24,7 +23,7 @@ def train(speaker_id_config_path, speaker_dist_config_path, stat_path, samples, 
         miu = miu.reshape(-1, 1)
         std = std.reshape(-1, 1)
 
-        remapper = ReMapper()
+        remapper = speaker_identification.ReMapper()
 
         dataset = speaker_identification.Dataset(
             samples,
