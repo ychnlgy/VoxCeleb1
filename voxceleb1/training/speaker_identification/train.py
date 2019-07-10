@@ -27,11 +27,6 @@ def train(config, dataset, testset, cores, original_model, log):
         shuffle=True,
         num_workers=cores
     )
-    testloader = torch.utils.data.DataLoader(
-        testset,
-        batch_size=config.batch_size*2,
-        num_workers=cores
-    )
 
     params = voxceleb1.utils.tensor_tools.param_count(original_model)
     log.write("Model parameters: %d" % params)

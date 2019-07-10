@@ -32,4 +32,4 @@ class Dataset(torch.utils.data.Dataset):
         i = self._rand.randint(0, dt - self._size)
         j = i + self._size
         X = (spec[:, i:j] - self._miu) / self._std
-        return torch.from_numpy(X).float(), uid
+        return torch.from_numpy(X).float().unsqueeze(0), uid

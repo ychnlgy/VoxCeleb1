@@ -26,6 +26,12 @@ def train(config, producer, model, log):
     else:
         device = "cpu"
 
+    testloader = torch.utils.data.DataLoader(
+        testset,
+        batch_size=config.batch_size*2,
+        num_workers=cores
+    )
+
     lossf = triplet_loss.batch_hard
     log.write("Loss function: triplet loss (batch-hard)")
     
