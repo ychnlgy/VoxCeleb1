@@ -1,9 +1,7 @@
-from .. import speaker_identification
-
 import voxceleb1
 
 
-class SubjectDataProducer(speaker_identification.DataProducer):
+class SubjectDataProducer:
 
     def __init__(self, num_samples, *args, **kwargs):
         super().__init__(*args, **kwargs)
