@@ -23,7 +23,7 @@ class TopClassPredictor:
             for i, top_k in enumerate(self.top_ks):
                 count = matches[:, :top_k].sum(dim=1)
                 acc = count.mean().item()
-                self.acc[i] = self._average(acc, n)
+                self.acc[i] = self._average(self.acc[i], acc, n)
             self.n += n
 
     def peek(self):
@@ -31,8 +31,8 @@ class TopClassPredictor:
 
     # === PRIVATE ===
 
-    def _average(self, acc, n):
+    def _average(self, curr_acc, acc, n):
         new_n = n + self.n
         p1 = n / new_n * acc
-        p2 = self.n / new_n * self.acc
+        p2 = self.n / new_n * curr_acc
         return p1 + p2

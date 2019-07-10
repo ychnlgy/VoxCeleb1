@@ -29,7 +29,9 @@ class _BaseModel(abc.ABC, torch.nn.Module):
         del self._tail
 
     def extract(self, X):
-        return self._main(X)
+        shape = X.size()
+        X = X.view(-1, *shape[-3:])
+        return self._main(X).view(*shape[:-3], -1)
 
     def forward(self, X):
         return self._tail(self.extract(X))

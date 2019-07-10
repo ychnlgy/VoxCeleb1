@@ -26,6 +26,7 @@ def train(config, producer, model, log):
     else:
         device = "cpu"
 
+    # TODO!
     testloader = torch.utils.data.DataLoader(
         testset,
         batch_size=config.batch_size*2,
