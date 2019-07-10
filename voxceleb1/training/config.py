@@ -30,7 +30,7 @@ class Config:
         return self.param_dict[key]
 
     def __str__(self):
-        return "Config: <%s>\n\t%s" % (
+        return "Config: <%s>\n%s" % (
             self.param_path, self._str_params()
         )
 
