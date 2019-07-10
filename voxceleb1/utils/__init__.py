@@ -1,6 +1,7 @@
 from . import tensor_tools
 from .batch_stat import BatchStat
 from .ChunkFile import ChunkFile
+from .email_logger import EmailLogger
 from .FragmentFile import FragmentFile
 from .format_time import format_time
 from .Logger import Logger

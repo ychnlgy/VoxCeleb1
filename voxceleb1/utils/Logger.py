@@ -25,7 +25,6 @@ class Logger:
         self.fout.close()
 
     def write(self, msg, end="\n", silent=False):
-        tm = time.localtime()
         prefix = "[%s] " % format_time()
         msg = prefix + msg + end
         self.fout.write(msg)

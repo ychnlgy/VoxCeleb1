@@ -12,6 +12,7 @@ if __name__ == "__main__":
     parser.add_argument("--log_path", required=True)
     parser.add_argument("--cores", type=int, required=True)
     parser.add_argument("--max_chunks", type=int)
+    parser.add_argument("--email")
     args = parser.parse_args()
 
     voxceleb1.train(
@@ -21,5 +22,6 @@ if __name__ == "__main__":
         args.data_path,
         args.log_path,
         args.cores,
-        args.max_chunks
+        args.max_chunks,
+        args.email
     )
