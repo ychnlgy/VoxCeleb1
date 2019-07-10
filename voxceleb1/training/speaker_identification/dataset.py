@@ -21,7 +21,7 @@ class Dataset(torch.utils.data.Dataset):
         self.features = self._data[0].spec.shape[0]
 
     def _filter_samples(self, samples):
-        with self._remap.activate(lock=~self._dev):
+        with self._remap.activate(lock=not self._dev):
             for s in tqdm.tqdm(samples, ncols=80, desc="Remapping uids"):
                 s.uid = self._remap[s.uid]
         return [s for s in samples if bool(s.dev) == self._dev]
@@ -33,7 +33,7 @@ class Dataset(torch.utils.data.Dataset):
         return len(self._data)
 
     def __getitem__(self, idx):
-        sample = self._data[idx]  
+        sample = self._data[idx]
         spec, uid = sample.spec, sample.uid
         spec = torch.from_numpy(spec).float()
         dt = spec.size(-1)
