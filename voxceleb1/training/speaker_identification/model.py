@@ -25,6 +25,9 @@ class _BaseModel(abc.ABC, torch.nn.Module):
             *self.make_tail_layers(latent_size, unique_labels)
         )
 
+    def cut_tail(self):
+        del self._tail
+
     def extract(self, X):
         return self._main(X)
 

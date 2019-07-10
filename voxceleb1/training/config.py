@@ -41,7 +41,7 @@ class Config:
             return json.load(f)
 
     def _str_params(self):
-        return "\n\t".join(
-            " = ".join([k, str(v)])
+        return "\n".join(
+            "{: >20} = {}".format(k, str(v))
             for k, v in sorted(self.param_dict.items())
         )

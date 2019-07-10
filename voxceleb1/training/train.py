@@ -67,6 +67,8 @@ def train(
             log
         )
 
+        model.cut_tail()  # feature extraction only
+
 ##        speaker_dist_config = Config(
 ##            speaker_dist_config_path
 ##        )
