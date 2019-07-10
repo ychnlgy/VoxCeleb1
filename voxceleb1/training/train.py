@@ -44,6 +44,7 @@ def train(
             random,
             dev=True
         )
+        log.write("Number of training samples: %d" % len(dataset))
 
         testset = speaker_identification.Dataset(
             samples,
@@ -52,6 +53,7 @@ def train(
             random,
             dev=False
         )
+        log.write("Number of testing samples: %d" % len(dataset))
 
         log.write("Instantiating model")
         model = speaker_identification.search_model(
