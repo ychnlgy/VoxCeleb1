@@ -17,6 +17,7 @@ if __name__ == "__main__":
     voxceleb1.train(
         args.speaker_id_config_path,
         args.speaker_dist_config_path,
+        args,stat_path,
         args.data_path,
         args.log_path,
         args.cores,
