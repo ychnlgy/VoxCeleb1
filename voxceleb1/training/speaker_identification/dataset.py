@@ -18,6 +18,7 @@ class Dataset(torch.utils.data.Dataset):
         self._remap = remapper
         self._dev = bool(dev)
         self._data = self._filter_samples(samples)
+        self.features = self._data[0].spec.shape[0]
 
     def _filter_samples(self, samples):
         return [s for s in samples if bool(s.dev) == self._dev]
