@@ -7,7 +7,9 @@ def train(
     speaker_id_config_path,
     speaker_dist_config_path,
     stat_path,
-    data_path, log_path,
+    data_path,
+    log_path,
+    cores,
     max_chunks
 ):
     with utils.Logger(log_path) as log:
@@ -22,6 +24,7 @@ def train(
             speaker_id_config_path,
             speaker_dist_config_path,
             stat_path,
+            cores,
             samples,
             log
         )

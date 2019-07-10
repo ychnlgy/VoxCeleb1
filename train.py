@@ -10,6 +10,7 @@ if __name__ == "__main__":
     parser.add_argument("--stat_path", required=True)
     parser.add_argument("--data_path", required=True)
     parser.add_argument("--log_path", required=True)
+    parser.add_argument("--cores", type=int, required=True)
     parser.add_argument("--max_chunks", type=int)
     args = parser.parse_args()
 
@@ -18,5 +19,6 @@ if __name__ == "__main__":
         args.speaker_dist_config_path,
         args.data_path,
         args.log_path,
+        args.cores,
         args.max_chunks
     )

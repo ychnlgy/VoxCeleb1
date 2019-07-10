@@ -7,7 +7,14 @@ from .config import Config
 
 from .. import utils
 
-def train(speaker_id_config_path, speaker_dist_config_path, stat_path, samples, log):
+def train(
+    speaker_id_config_path,
+    speaker_dist_config_path,
+    stat_path,
+    cores,
+    samples,
+    log
+):
     speaker_id_config = Config(
         speaker_id_config_path
     )
@@ -54,23 +61,23 @@ def train(speaker_id_config_path, speaker_dist_config_path, stat_path, samples, 
 
         speaker_identification.train(
             speaker_id_config,
-            speaker_id_producer,
+            dataset, testset,
+            cores,
             model,
             log
         )
 
-        speaker_dist_config = Config(
-            speaker_dist_config_path
-        )
-        speaker_dist_producer = speaker_distance.SubjectDataProducer(
-            speaker_dist_config.num_samples,
-            speaker_id_config.slice_size,
-            dataset,
-            random
-        )
-        speaker_distance.train(
-            speaker_dist_config,
-            speaker_dist_producer,
-            model,
-            log
-        )
+##        speaker_dist_config = Config(
+##            speaker_dist_config_path
+##        )
+##        speaker_dist_producer = speaker_distance.SubjectDataProducer(
+##            speaker_dist_config.num_samples,
+##            dataset,
+##            random
+##        )
+##        speaker_distance.train(
+##            speaker_dist_config,
+##            speaker_dist_producer,
+##            model,
+##            log
+##        )

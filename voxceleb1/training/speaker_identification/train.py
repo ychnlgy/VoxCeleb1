@@ -4,9 +4,11 @@ import os
 import torch
 import tqdm
 
+import torch.utils.data
+
 import voxceleb1
 
-def train(config, producer, original_model, log):
+def train(config, dataset, testset, cores, original_model, log):
     if os.path.isfile(config.modelf):
         log.write(
             "Model already trained " \
@@ -50,14 +52,17 @@ def train(config, producer, original_model, log):
 
     for epoch in range(config.epochs):
 
-        data, test = producer.produce()
-        dataloader = voxceleb1.utils.tensor_tools.create_loader(
-            data, batch_size=config.batch_size, shuffle=True
+        dataloader = torch.utils.data.DataLoader(
+            dataset,
+            batch_size=config.batch_size,
+            shuffle=True,
+            num_workers=cores
         )
-        testloader = voxceleb1.utils.tensor_tools.create_loader(
-            test, batch_size=config.batch_size*2
+        testloader = torch.utils.data.DataLoader(
+            testset,
+            batch_size=config.batch_size*2,
+            num_workers=cores
         )
-        
         model.train()
 
         with tqdm.tqdm(dataloader, ncols=80) as bar:
