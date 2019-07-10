@@ -30,12 +30,16 @@ def train(
         miu = miu.reshape(-1, 1)
         std = std.reshape(-1, 1)
 
+        log.write("Remapping subject IDs")
         remapper = speaker_identification.ReMapper()
+        with remapper.activate(lock=False):
+            for sample in samples:
+                sample.uid = remapper[sample.uid]
 
+        log.write("Instantiating datasets")
         dataset = speaker_identification.Dataset(
             samples,
             speaker_id_config.slice_size,
-            remapper,
             miu, std,
             random,
             dev=True
@@ -44,7 +48,6 @@ def train(
         testset = speaker_identification.Dataset(
             samples,
             speaker_id_config.slice_size,
-            remapper,
             miu, std,
             random,
             dev=False
@@ -55,7 +58,7 @@ def train(
             speaker_id_config.model,
             dataset.features,
             speaker_id_config.latent_size,
-            dataset.len_unique_labels()
+            len(remapper)
         )
         log.write("Architecture:\n%s" % str(model))
 

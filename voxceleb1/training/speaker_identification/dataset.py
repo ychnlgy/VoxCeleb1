@@ -9,28 +9,18 @@ import voxceleb1
 
 class Dataset(torch.utils.data.Dataset):
 
-    def __init__(self, samples, slice_size, remapper, miu, std, random, dev):
+    def __init__(self, samples, slice_size, miu, std, random, dev):
         super().__init__()
         self._size = slice_size
         self._rand = random
         self._miu = miu
         self._std = std
-        self._remap = remapper
         self._dev = bool(dev)
         self._data = self._filter_samples(samples)
         self.features = self._data[0].spec.shape[0]
 
     def _filter_samples(self, samples):
-        out = []
-        with self._remap.activate(lock=not self._dev):
-            for s in tqdm.tqdm(samples, ncols=80, desc="Remapping uids"):
-                if bool(s.dev) == self._dev:
-                    s.uid = self._remap[s.uid]
-                    out.append(s)
-        return out
-
-    def len_unique_labels(self):
-        return len(self._remap)
+        return [s for s in samples if bool(s.dev) == self._dev]
 
     def __len__(self):
         return len(self._data)

@@ -1,2 +1,8 @@
-from .data_producer import SubjectDataProducer
-from .train import train
+import torch
+import torch.utils.data
+
+
+class Dataset(torch.utils.data.Dataset):
+
+    def __init__(self):
+        pass
