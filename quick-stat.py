@@ -1,5 +1,6 @@
 import argparse
 import collections
+import numpy
 
 import voxceleb1
 

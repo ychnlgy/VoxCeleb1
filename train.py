@@ -7,6 +7,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--speaker_id_config_path", required=True)
     parser.add_argument("--speaker_dist_config_path", required=True)
+    parser.add_argument("--stat_path", required=True)
     parser.add_argument("--data_path", required=True)
     parser.add_argument("--log_path", required=True)
     parser.add_argument("--max_chunks", type=int)

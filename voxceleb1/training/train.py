@@ -1,13 +1,14 @@
 """Main pipeline for training."""
-
+import numpy
 
 from . import speaker_identification
 from . import speaker_distance
 from .config import Config
+from .remapper import ReMapper
 
 from .. import utils
 
-def train(speaker_id_config_path, speaker_dist_config_path, samples, log):
+def train(speaker_id_config_path, speaker_dist_config_path, stat_path, samples, log):
     speaker_id_config = Config(
         speaker_id_config_path
     )
@@ -19,11 +20,28 @@ def train(speaker_id_config_path, speaker_dist_config_path, samples, log):
             "%d" % speaker_id_config.seed
         )
 
-        dataset = speaker_identification.Dataset.create(samples, log)
-        speaker_id_producer = speaker_identification.DataProducer(
+        miu, std = numpy.load(stat_path)
+        miu = miu.reshape(-1, 1)
+        std = std.reshape(-1, 1)
+
+        remapper = ReMapper()
+
+        dataset = speaker_identification.Dataset(
+            samples,
             speaker_id_config.slice_size,
-            dataset,
-            random
+            remapper,
+            miu, std,
+            random,
+            dev=True
+        )
+
+        testset = speaker_identification.Dataset(
+            samples,
+            speaker_id_config.slice_size,
+            remapper,
+            miu, std,
+            random,
+            dev=False
         )
 
         log.write("Instantiating model")

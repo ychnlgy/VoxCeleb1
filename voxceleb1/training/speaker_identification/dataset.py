@@ -9,17 +9,21 @@ import voxceleb1
 
 class Dataset(torch.utils.data.Dataset):
 
-    def __init__(self, samples, slice_size, remapper, random):
+    def __init__(self, samples, slice_size, remapper, miu, std, random, dev):
         super().__init__()
         self._size = slice_size
         self._rand = random
+        self._miu = miu
+        self._std = std
+        self._dev = bool(dev)
         self._data = list(self._init_samples(samples, remapper))
 
     def _init_samples(self, samples, remapper):
-        for s in samples:
-            spec = torch.from_numpy(s.spec).float()
-            uid = remapper[s.uid]
-            yield spec, uid
+        for s in tqdm.tqdm(samples, desc="Initializing samples", ncols=80):
+            if bool(s.dev) == self._dev:
+                spec = torch.from_numpy(s.spec).float()
+                uid = remapper[s.uid]
+                yield spec, uid
 
     def __len__(self):
         return len(self._data)
@@ -29,7 +33,8 @@ class Dataset(torch.utils.data.Dataset):
         dt = spec.size(-1)
         i = self._rand.randint(0, dt - self._size)
         j = i + self._size
-        return spec[:, i:j], uid
+        X = (spec[:, i:j] - self._miu) / self._std
+        return X, uid
         
 ##class Dataset:
 ##

@@ -6,6 +6,7 @@ from . import training
 def train(
     speaker_id_config_path,
     speaker_dist_config_path,
+    stat_path,
     data_path, log_path,
     max_chunks
 ):
@@ -20,6 +21,7 @@ def train(
         training.train(
             speaker_id_config_path,
             speaker_dist_config_path,
+            stat_path,
             samples,
             log
         )
