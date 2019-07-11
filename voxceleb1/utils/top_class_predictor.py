@@ -17,7 +17,7 @@ class TopClassPredictor:
         y : torch LongTensor of size (N), the class labels.
         """
         with torch.no_grad():
-            _, choices = yh.sort()
+            _, choices = yh.sort(dim=1, descending=True)
             n = len(yh)
             matches = (choices == y.unsqueeze(1)).float()
             for i, top_k in enumerate(self.top_ks):
