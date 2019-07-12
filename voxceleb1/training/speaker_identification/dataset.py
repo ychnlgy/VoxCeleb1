@@ -35,4 +35,4 @@ class Dataset(torch.utils.data.Dataset):
         return torch.from_numpy(X).float().unsqueeze(0), uid
 
     def get_uid(self, idx):
-        return self._data[idx].uid
+        return int(self._data[idx].uid)
