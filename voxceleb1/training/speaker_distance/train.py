@@ -42,14 +42,23 @@ def train(config, dataset, testset, cores, model, log):
 
     lossf = triplet_loss.batch_hard
     log.write("Loss function: triplet loss (batch-hard)")
+
+    params = list(model.tail_parameters())
     
     optim = torch.optim.SGD(
-        model.parameters(),
+        params,
         lr=config.lr,
         momentum=0.9,
         weight_decay=config.weight_decay
     )
     log.write("Optimizer:\n%s" % optim)
+
+    param_count = sum(
+        torch.numel(p)
+        for p in params
+        if p.requires_grad
+    )
+    log.write("Parameters to optimize: %d" % param_count)
     
     avg = voxceleb1.utils.MovingAverage(momentum=0.95)
 
@@ -62,7 +71,7 @@ def train(config, dataset, testset, cores, model, log):
         with tqdm.tqdm(dataloader, ncols=80) as bar:
             for X in bar:
                 X = X.to(device)
-                features = model.extract(X)
+                features = model.embed(X)
                 loss = lossf(features)
 
                 optim.zero_grad()

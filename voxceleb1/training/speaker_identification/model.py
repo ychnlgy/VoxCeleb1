@@ -25,13 +25,18 @@ class _BaseModel(abc.ABC, torch.nn.Module):
             *self.make_tail_layers(latent_size, unique_labels)
         )
 
-    def cut_tail(self):
-        del self._tail
+    def tail_parameters(self):
+        return self._tail.parameters()
 
     def extract(self, X):
         shape = X.size()
         X = X.view(-1, *shape[-3:])
         return self._main(X).view(*shape[:-3], -1)
+
+    def embed(self, X):
+        with torch.no_grad():
+            features = self.extract(X)
+        return self._tail(features)
 
     def forward(self, X):
         return self._tail(self.extract(X))
