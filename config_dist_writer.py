@@ -13,6 +13,7 @@ if __name__ == "__main__":
     parser.add_argument("--weight_decay", type=float, required=True)
     parser.add_argument("--epochs", type=int, required=True)
     parser.add_argument("--batch_size", type=int, required=True)
+    parser.add_argument("--embed_size", type=int, required=True)
     args = parser.parse_args()
     
     voxceleb1.training.Config.write(vars(args), path_header="path")

@@ -1,1 +1,1 @@
-{"path": "config/short-res-v1-dist.json", "num_samples": 8, "modelf": "parameters/short-res-v1-dist.torch", "lr": 0.01, "weight_decay": 1e-05, "epochs": 30, "batch_size": 8, "_dob": "2019-07-10-17:22:12"}
+{"path": "config/short-res-v1-dist.json", "num_samples": 8, "modelf": "parameters/short-res-v1-dist.torch", "lr": 0.01, "weight_decay": 1e-05, "epochs": 30, "batch_size": 8, "_dob": "2019-07-10-17:22:12", "embed_size": 512}

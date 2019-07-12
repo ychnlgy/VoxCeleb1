@@ -25,6 +25,11 @@ class _BaseModel(abc.ABC, torch.nn.Module):
             *self.make_tail_layers(latent_size, unique_labels)
         )
 
+    def replace_tail(self, latent_size, embed_size):
+        self._tail = torch.nn.Sequential(
+            *self.make_embed_layers(latent_size, unique_labels)
+        )
+
     def tail_parameters(self):
         return self._tail.parameters()
 
@@ -46,8 +51,12 @@ class _BaseModel(abc.ABC, torch.nn.Module):
         "Return the list of modules for extracting latent features."
 
     @abc.abstractmethod
-    def make_tail_layers(self, latent_sie, unique_labels):
+    def make_tail_layers(self, latent_size, unique_labels):
         "Return the list of modules for transforming latent -> predict."
+
+    @abc.abstractmethod
+    def make_embed_layers(self, latent_size, embed_size):
+        "Return the list of modules for transforming latent -> embedding."
 
 class _OneClassModule(torch.nn.Module):
 
@@ -165,4 +174,10 @@ class _ShortRes(_BaseModel, _ResModel):
         "Return the list of modules for transforming latent -> predict."
         return [
             torch.nn.Linear(latent_size, unique_labels)
+        ]
+
+    def make_embed_layers(self, latent_size, embed_size):
+        "Return the list of modules for transforming latent -> embedding."
+        return [
+            torch.nn.Linear(latent_size, embed_size)
         ]

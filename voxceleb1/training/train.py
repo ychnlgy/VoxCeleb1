@@ -77,6 +77,12 @@ def train(
         )
         log.write(str(speaker_dist_config))
 
+        log.write("Replacing tail of model with embedding module")
+        model.replace_tail(
+            latent_size=speaker_id_config.latent_size,
+            embed_size=speaker_dist_config.embed_size
+        )
+
         log.write("Instantiating datasets for metric learning")
         speaker_dist_dataset = speaker_distance.Dataset(
             speaker_id_dataset=dataset,
