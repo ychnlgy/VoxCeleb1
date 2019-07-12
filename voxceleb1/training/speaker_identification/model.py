@@ -1,6 +1,3 @@
-# Think about dense nets
-# Todo : write tail
-
 import abc
 
 import torch
@@ -27,7 +24,7 @@ class _BaseModel(abc.ABC, torch.nn.Module):
 
     def replace_tail(self, latent_size, embed_size):
         self._tail = torch.nn.Sequential(
-            *self.make_embed_layers(latent_size, unique_labels)
+            *self.make_embed_layers(latent_size, embed_size)
         )
 
     def tail_parameters(self):
