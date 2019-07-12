@@ -81,7 +81,6 @@ def train(
         speaker_dist_dataset = speaker_distance.Dataset(
             speaker_id_dataset=dataset,
             num_samples=speaker_dist_config.num_samples,
-            total_subjects=len(remapper),
             random=random
         )
         log.write(
@@ -92,7 +91,6 @@ def train(
         speaker_dist_testset = speaker_distance.Dataset(
             speaker_id_dataset=testset,  # Note: here is the difference.
             num_samples=speaker_dist_config.num_samples,
-            total_subjects=len(remapper),
             random=random
         )
         log.write(
