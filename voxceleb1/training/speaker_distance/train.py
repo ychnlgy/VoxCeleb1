@@ -1,6 +1,7 @@
 import os
 
 import torch
+import tqdm
 
 from .loss import triplet_loss
 
