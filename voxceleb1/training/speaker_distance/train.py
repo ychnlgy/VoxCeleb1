@@ -27,6 +27,7 @@ def train(config, dataset, testset, cores, original_model, log):
         model = torch.nn.DataParallel(original_model)
     else:
         device = "cpu"
+        model = original_model
 
     dataloader = torch.utils.data.DataLoader(
         dataset,

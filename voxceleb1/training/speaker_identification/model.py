@@ -32,9 +32,6 @@ class _BaseModel(abc.ABC, torch.nn.Module):
         )
         #self._nograd_extract = True
 
-    def tail_parameters(self):
-        return self._tail.parameters()
-
     def extract(self, X):
         shape = X.size()
         X = X.view(-1, *shape[-3:])
