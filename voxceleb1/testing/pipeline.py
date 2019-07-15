@@ -42,6 +42,7 @@ def pipeline(
 
     if use_embedding:
         # Load the final parameters trained from metric-learning verification.
+        print("Loading model parameters: %s" % speaker_dist_config.modelf)
         model.replace_tail(
             latent_size=speaker_id_config.latent_size,
             embed_size=speaker_dist_config.embed_size
@@ -50,6 +51,7 @@ def pipeline(
             speaker_dist_config.modelf
         ))
     else:
+        print("Loading model parameters: %s" % speaker_id_config.modelf)
         model.load_state_dict(torch.load(
             speaker_id_config.modelf
         ))
