@@ -40,6 +40,8 @@ def pipeline(
         latent_size=speaker_id_config.latent_size
     )
 
+    del model._tail
+
     if use_embedding:
         # Load the final parameters trained from metric-learning verification.
         print("Loading model parameters: %s" % speaker_dist_config.modelf)
