@@ -32,6 +32,8 @@ def pipeline(
     iterator of torch FloatTensor vector embedding of size (d), where d
         is the number of latent features.
     """
+    device = ["cpu", "cuda"][torch.cuda.is_available()]
+    
     speaker_id_config = training.Config(speaker_id_config_path)
     speaker_dist_config = training.Config(speaker_dist_config_path)
 
@@ -56,6 +58,8 @@ def pipeline(
         model.load_state_dict(torch.load(
             speaker_id_config.modelf
         ))
+
+    model = model.to(device)
     
     miu, std = numpy.load(stat_path)
     miu = miu.reshape(-1, 1)
@@ -64,9 +68,9 @@ def pipeline(
     model.eval()
 
     for fpath in tqdm.tqdm(fpaths, ncols=80, desc="Embedding speakers"):
-        yield run(fpath, miu, std, model)
+        yield run(fpath, miu, std, model, device)
 
-def run(fpath, miu, std, model):
+def run(fpath, miu, std, model, device):
     """Return torch Tensor vector embedding of the audio at fpath.
 
     Parameters :
@@ -99,8 +103,8 @@ def run(fpath, miu, std, model):
 
     # Step 4: normalized spectrogram -> vector embedding
     with torch.no_grad():
-        tx = torch.from_numpy(x).unsqueeze(0).unsqueeze(0)
-        embedding = model(tx.float()).squeeze(0)
+        tx = torch.from_numpy(x).unsqueeze(0).unsqueeze(0).float()
+        embedding = model(tx.to(device)).squeeze(0)
         assert len(embedding.shape) == 1
 
-    return embedding.clone()
+    return embedding.cpu().clone()
