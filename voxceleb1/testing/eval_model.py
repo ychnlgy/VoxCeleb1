@@ -56,7 +56,7 @@ def _map_file_to_embedding(
         speaker_dist_config_path,
         use_embedding
     ))
-    assert len(file_set) == list(embeddings)
+    assert len(file_set) == len(embeddings)
     return dict(zip(file_set, embeddings))
 
 def _compute_all_pair_dist(df, embedding_map, dist_fn):
