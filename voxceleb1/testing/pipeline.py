@@ -37,10 +37,9 @@ def pipeline(
 
     model = training.speaker_identification.search_model(
         model_id=speaker_id_config.model,
-        latent_size=speaker_id_config.latent_size
+        latent_size=speaker_id_config.latent_size,
+        unique_labels=1251
     )
-
-    del model._tail
 
     if use_embedding:
         # Load the final parameters trained from metric-learning verification.
