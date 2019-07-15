@@ -1,8 +1,12 @@
+import os
+
 import numpy
 import torch
 import torch.utils.data
+import tqdm
 
 from .cluster import Cluster
+from .cluster_cossim import ClusterCossim
 from .dataset import Dataset
 
 from .. import preprocess
@@ -12,22 +16,25 @@ class Diarizer:
 
     def __init__(
         self,
+        root,
         speaker_id_config_path,
         speaker_dist_config_path,
-        param_path,
         stat_path,
         batch_size,
         num_workers,
         slice_size,
         step_size,
-        threshold
+        threshold,
+        use_embedding
     ):
+        self._root = root
+        self._device = ["cpu", "cuda"][torch.cuda.is_available()]
+        self._use_embedding = use_embedding
         self._model = self._load_model(
             speaker_id_config_path,
-            speaker_dist_config_path,
-            param_path
+            speaker_dist_config_path
         )
-        self._miu, self._std = self._load_stats(param_path)
+        self._miu, self._std = self._load_stats(stat_path)
         self._batch_size = batch_size
         self._num_workers = num_workers
         self._slice_size = slice_size
@@ -36,18 +43,19 @@ class Diarizer:
 
     def process(self, fpath):
         spec = self._extract_spectrogram(fpath)
-        embeddings = self._extract_embeddings(spec)
+        embeddings = self._extract_embeddings(spec, fpath)
         clusters = self._collect_clusters(embeddings)
         joined_clusters = self._join_clusters(clusters)
         return self._clean(joined_clusters)
 
-    def _extract_embeddings(self, spec):
+    def _extract_embeddings(self, spec, fpath):
         "Return the speaker embeddings made by the model on the spectrogram."
         dataloader = self._create_dataloader(spec)
         embeddings = []
+        fname = os.path.basename(fpath)
         with torch.no_grad():
-            for X in dataloader:
-                embedding = self._model.embed(X)
+            for X in tqdm.tqdm(dataloader, ncols=80, desc="Processing %s" % fname):
+                embedding = self._model(X.to(self._device))
                 embeddings.append(embedding)
         return torch.cat(embeddings, dim=0)
 
@@ -106,7 +114,8 @@ class Diarizer:
         return out
 
     def _create_cluster(self, idx, embedding):
-        return Cluster(
+        ClusterClass = [ClusterCossim, Cluster][self._use_embedding]
+        return ClusterClass(
             index=idx,
             slice_len=1,
             embedding=embedding,
@@ -137,16 +146,26 @@ class Diarizer:
     def _load_model(
         self,
         speaker_id_config_path,
-        speaker_dist_config_path,
-        param_path
+        speaker_dist_config_path
     ):
         speaker_id_config = training.Config(speaker_id_config_path)
-        speaker_dist_config = training.Config(speaker_dist_config_path)
+
+        if self._use_embedding:
+            speaker_dist_config = training.Config(speaker_dist_config_path)
+            param_path = speaker_dist_config.modelf
+            unique_labels = None
+        else:
+            param_path = speaker_id_config.modelf
+            unique_labels = 1251
 
         model = training.speaker_identification.search_model(
             model_id=speaker_id_config.model,
-            latent_size=speaker_id_config.latent_size
+            latent_size=speaker_id_config.latent_size,
+            unique_labels=unique_labels
         )
-        model.load_state_dict(torch.load(param_path))
+        
+        model.load_state_dict(torch.load(
+            os.path.join(self._root, param_path)
+        ))
         model.eval()
-        return model
+        return model.to(self._device)
