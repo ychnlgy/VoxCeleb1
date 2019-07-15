@@ -32,11 +32,15 @@ def pipeline(
     speaker_dist_config = training.Config(speaker_dist_config_path)
 
     model = training.speaker_identification.search_model(
-        speaker_id_config.model
+        model_id=speaker_id_config.model,
+        latent_size=speaker_id_config.latent_size
     )
 
     # Load the final parameters trained from metric-learning verification.
-    model.cut_tail()
+    model.replace_tail(
+        latent_size=speaker_id_config.latent_size,
+        embed_size=speaker_dist_config.embed_size
+    )
     model.load_state_dict(torch.load(
         speaker_dist_config.modelf
     ))

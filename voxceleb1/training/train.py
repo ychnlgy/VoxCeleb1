@@ -58,7 +58,6 @@ def train(
         log.write("Instantiating model")
         model = speaker_identification.search_model(
             speaker_id_config.model,
-            dataset.features,
             speaker_id_config.latent_size,
             len(remapper)
         )

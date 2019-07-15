@@ -5,22 +5,25 @@ import torch
 import voxceleb1
 
 
-def search_model(model_id, features, latent_size, unique_labels):
-    return _get_model_dict()[model_id](features, latent_size, unique_labels)
+def search_model(model_id, latent_size, unique_labels=None):
+    return _get_model_dict()[model_id](latent_size, unique_labels)
 
 def _get_model_dict():
     return {Model.ID: Model for Model in _BaseModel.__subclasses__()}
 
 class _BaseModel(abc.ABC, torch.nn.Module):
 
-    def __init__(self, features, latent_size, unique_labels):
+    def __init__(self, latent_size, unique_labels):
         torch.nn.Module.__init__(self)
         self._main = torch.nn.Sequential(
-            *self.make_main_layers(features, latent_size)
+            *self.make_main_layers(latent_size)
         )
-        self._tail = torch.nn.Sequential(
-            *self.make_tail_layers(latent_size, unique_labels)
-        )
+        if unique_labels is None:
+            self._tail = None
+        else:
+            self._tail = torch.nn.Sequential(
+                *self.make_tail_layers(latent_size, unique_labels)
+            )
 
     def replace_tail(self, latent_size, embed_size):
         self._tail = torch.nn.Sequential(
@@ -44,7 +47,7 @@ class _BaseModel(abc.ABC, torch.nn.Module):
         return self._tail(self.extract(X))
 
     @abc.abstractmethod
-    def make_main_layers(self, features, latent_size):
+    def make_main_layers(self, latent_size):
         "Return the list of modules for extracting latent features."
 
     @abc.abstractmethod
@@ -70,7 +73,7 @@ class _OneClass(_BaseModel):
 
     ID = "one-class"
 
-    def make_main_layers(self, features, latent_size):
+    def make_main_layers(self, latent_size):
         "Return the list of modules for extracting latent features."
         return []
 
@@ -135,7 +138,7 @@ class _ShortRes(_BaseModel, _ResModel):
 
     ID = "short-res"
 
-    def make_main_layers(self, features, latent_size):
+    def make_main_layers(self, latent_size):
         "Return the list of modules for extracting latent features."
         return [
             # (256, 300) -> (128, 150)

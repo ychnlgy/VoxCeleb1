@@ -8,7 +8,7 @@ from .loss import triplet_loss
 import voxceleb1
 
 
-def train(config, dataset, testset, cores, model, log):
+def train(config, dataset, testset, cores, original_model, log):
 
     log.write("Part 2: metric learning")
     
@@ -18,12 +18,13 @@ def train(config, dataset, testset, cores, model, log):
             "on metric learning here: " \
             "%s" % config.modelf
         )
-        model.load_state_dict(torch.load(config.modelf))
-        return model
+        original_model.load_state_dict(torch.load(config.modelf))
+        return original_model
 
     if torch.cuda.is_available():
         device = "cuda"
-        model = torch.nn.DataParallel(model.to(device))
+        original_model = original_model.to(device)
+        model = torch.nn.DataParallel(original_model)
     else:
         device = "cpu"
 
@@ -43,7 +44,7 @@ def train(config, dataset, testset, cores, model, log):
     lossf = triplet_loss.batch_hard
     log.write("Loss function: triplet loss (batch-hard)")
 
-    params = list(model.tail_parameters())
+    params = list(original_model.tail_parameters())
     
     optim = torch.optim.SGD(
         params,
@@ -87,8 +88,8 @@ def train(config, dataset, testset, cores, model, log):
     if not os.path.isdir(dname):
         os.makedirs(dname)
         
-    model = model.cpu()
-    torch.save(model.state_dict(), config.modelf)
+    original_model = original_model.cpu()
+    torch.save(original_model.state_dict(), config.modelf)
     log.write("Saved model to %s" % config.modelf)
     
     return model
