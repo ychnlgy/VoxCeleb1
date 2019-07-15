@@ -17,6 +17,9 @@ class Cluster:
         self._threshold = threshold
         self._label = None
 
+    def average(self):
+        return sum(self._embs)/len(self._embs)
+
     def get_label(self):
         return self._label
 

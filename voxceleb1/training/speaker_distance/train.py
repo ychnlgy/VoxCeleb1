@@ -72,7 +72,7 @@ def train(config, dataset, testset, cores, original_model, log):
         with tqdm.tqdm(dataloader, ncols=80) as bar:
             for X in bar:
                 X = X.to(device)
-                features = model.embed(X)
+                features = model(X)
                 loss = lossf(features)
 
                 optim.zero_grad()

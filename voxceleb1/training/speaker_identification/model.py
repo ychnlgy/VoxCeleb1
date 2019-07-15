@@ -29,6 +29,7 @@ class _BaseModel(abc.ABC, torch.nn.Module):
         self._tail = torch.nn.Sequential(
             *self.make_embed_layers(latent_size, embed_size)
         )
+        self.forward = self.embed
 
     def tail_parameters(self):
         return self._tail.parameters()

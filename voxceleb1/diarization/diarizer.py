@@ -67,7 +67,7 @@ class Diarizer:
 
     def _join_clusters(self, clusters):
         "Relabel the clusters if they belong to the same person."
-        raise NotImplementedError
+        raise NotImplemented
 
     def _clean(self, joined_clusters):
         "Return a simple format for interpreting the diarization."
