@@ -48,8 +48,6 @@ def _map_file_to_embedding(
     speaker_dist_config_path,
     use_embedding
 ):
-    print(dataroot, file_set[0])
-    input()
     fpaths = [os.path.join(dataroot, f) for f in file_set]
     embedding_iterator = pipeline(
         fpaths, stat_path,
