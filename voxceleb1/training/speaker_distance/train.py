@@ -44,7 +44,7 @@ def train(config, dataset, testset, cores, original_model, log):
     lossf = triplet_loss.batch_hard
     log.write("Loss function: triplet loss (batch-hard)")
 
-    params = list(original_model.tail_parameters())
+    params = list(model.parameters())
     
     optim = torch.optim.SGD(
         params,
@@ -82,7 +82,7 @@ def train(config, dataset, testset, cores, original_model, log):
                 avg.update(loss.item())
                 bar.set_description("Loss: %.4f" % avg.peek())
 
-        log.write("Epoch %d loss: %.4f" % (epoch, avg.peek()))
+        log.write("Epoch %d/%d loss: %.4f" % (epoch, config.epochs, avg.peek()))
 
     dname = os.path.dirname(config.modelf)
     if not os.path.isdir(dname):

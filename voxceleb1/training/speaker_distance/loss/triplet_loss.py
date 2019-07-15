@@ -18,4 +18,4 @@ def batch_hard(X, margin=1.0):
     pairwise_distances = dist.pairwise(X)
     inside, outside = pair.inside_out(pairwise_distances, p, k)
     value = margin + inside.max(dim=-1)[0] - outside.min(dim=-1)[0]
-    return torch.nn.functional.relu(value).sum()
+    return torch.nn.functional.relu(value).mean()
