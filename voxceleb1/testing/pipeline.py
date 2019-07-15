@@ -11,7 +11,8 @@ def pipeline(
     fpaths,
     stat_path,
     speaker_id_config_path,
-    speaker_dist_config_path
+    speaker_dist_config_path,
+    use_embedding
 ):
     """Iterates torch Tensor vector embedding of audio files in fpaths.
 
@@ -23,6 +24,9 @@ def pipeline(
         identification.
     speaker_dist_config_path : str path to Config json for speaker
         metric-learning/verification.
+    use_embedding : bool indicates if the embedding model is used
+        rather than cosine similarity with the outputs of speaker
+        identification.
 
     Output :
     iterator of torch FloatTensor vector embedding of size (d), where d
@@ -36,14 +40,19 @@ def pipeline(
         latent_size=speaker_id_config.latent_size
     )
 
-    # Load the final parameters trained from metric-learning verification.
-    model.replace_tail(
-        latent_size=speaker_id_config.latent_size,
-        embed_size=speaker_dist_config.embed_size
-    )
-    model.load_state_dict(torch.load(
-        speaker_dist_config.modelf
-    ))
+    if use_embedding:
+        # Load the final parameters trained from metric-learning verification.
+        model.replace_tail(
+            latent_size=speaker_id_config.latent_size,
+            embed_size=speaker_dist_config.embed_size
+        )
+        model.load_state_dict(torch.load(
+            speaker_dist_config.modelf
+        ))
+    else:
+        model.load_state_dict(torch.load(
+            speaker_id_config.modelf
+        ))
     
     miu, std = numpy.load(stat_path)
     miu = miu.reshape(-1, 1)
@@ -88,7 +97,7 @@ def run(fpath, miu, std, model):
     # Step 4: normalized spectrogram -> vector embedding
     with torch.no_grad():
         tx = torch.from_numpy(x).unsqueeze(0).unsqueeze(0)
-        embedding = model.embed(tx.float()).squeeze(0)
+        embedding = model(tx.float()).squeeze(0)
         assert len(embedding.shape) == 1
 
     return embedding.clone()

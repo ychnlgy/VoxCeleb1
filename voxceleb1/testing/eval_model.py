@@ -12,16 +12,19 @@ def main(
     dataroot,
     stat_path,
     speaker_id_config_path,
-    speaker_dist_config_path
+    speaker_dist_config_path,
+    use_embedding
 ):
     df = _parse_pair_file(veri_test_path)
     file_set = _collect_file_set(df)
     embedding_map = _map_file_to_embedding(
         dataroot, file_set, stat_path,
         speaker_id_config_path,
-        speaker_dist_config_path
+        speaker_dist_config_path,
+        use_embedding
     )
-    dist = _compute_all_pair_dist(df, embedding_map)
+    dist_fn = [cosine_sim, euclidean_dist][use_embedding]
+    dist = _compute_all_pair_dist(df, embedding_map, dist_fn)
     eer_scores = equal_error(df.label.values, dist)
     print("EER: %.2f\nThreshold: %f" % eer_scores)
 
@@ -42,23 +45,31 @@ def _collect_file_set(df):
 def _map_file_to_embedding(
     dataroot, file_set, stat_path,
     speaker_id_config_path,
-    speaker_dist_config_path
+    speaker_dist_config_path,
+    use_embedding
 ):
     fpaths = [os.path.join(dataroot, f) for f in file_set]
     embedding_iterator = pipeline(
         fpaths, stat_path,
         speaker_id_config_path,
-        speaker_dist_config_path
+        speaker_dist_config_path,
+        use_embedding
     )
     return dict(zip(file_set, embedding_iterator))
 
-def _compute_all_pair_dist(df, embedding_map):
+def _compute_all_pair_dist(df, embedding_map, dist_fn):
     yh = numpy.zeros(len(df))
     for i, label, f1, f2 in df.itertuples():
-        yh[i] = _compute_pair_dist(f1, f2, embedding_map)
+        yh[i] = _compute_pair_dist(f1, f2, embedding_map, dist_fn)
     return yh
 
-def _compute_pair_dist(f1, f2, embedding_map):
+def euclidean_dist(v1, v2):
+    return (v1 - v2).norm().item()
+
+def cosine_sim(v1, v2):
+    return (v1 * v2).sum().item()/v1.norm()/v2.norm()
+
+def _compute_pair_dist(f1, f2, embedding_map, dist_fn):
     v1 = embedding_map[f1]
     v2 = embedding_map[f2]
-    return (v1 - v2).norm().item()
+    return dist_fn(v1, v2)

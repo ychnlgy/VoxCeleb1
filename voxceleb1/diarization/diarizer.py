@@ -59,7 +59,7 @@ class Diarizer:
         for i in range(1, embeddings.size(0)):
             emb = embeddings[i]
             if focus_cluster.matches(emb):
-                focus_cluster.append(emb, dt=self._step_size)
+                focus_cluster.append(emb, dt=1)
             else:
                 focus_cluster = self._create_cluster(i, emb)
                 clusters.append(focus_cluster)
@@ -67,16 +67,48 @@ class Diarizer:
 
     def _join_clusters(self, clusters):
         "Relabel the clusters if they belong to the same person."
-        raise NotImplemented
+        num_clusters = len(clusters)
+        if num_clusters == 0:
+            return clusters
+        else:
+            clusters[0].set_label(0)
+            if num_clusters > 1:
+                c1 = clusters[1]
+                c1.set_label(1)
+                clusters = self._cluster_clusters(
+                    root_clusters=clusters[:2],
+                    todo=clusters[2:]
+                )
+        return clusters
+
+    def _cluster_clusters(self, labelled_clusters, todo):
+        cluster_id = 2
+        for cluster in todo:
+            matched = False
+            for labelled_cluster in reversed(labelled_clusters):
+                if labelled_cluster.matches(cluster.average()):
+                    cluster.copy_label(labelled_cluster)
+                    matched = True
+                    break
+            if not matched:
+                assert cluster.get_label() is None
+                cluster.set_label(cluster_id)
+                cluster_id += 1
+
+            # All clusters are retained
+            labelled_clusters.append(cluster)
 
     def _clean(self, joined_clusters):
-        "Return a simple format for interpreting the diarization."
-        raise NotImplementedError
+        "Return a numpy array of labels as representation of diarization."
+        out = numpy.zeros(joined_clusters[-1].get_slice().stop)
+        for cluster in joined_clusters:
+            out[cluster.get_slice()] = cluster.get_label()
+        return out
 
     def _create_cluster(self, idx, embedding):
         return Cluster(
-            index=idx*self._step_size,
-            slice_len=self._slice_len,
+            index=idx,
+            slice_len=1,
             embedding=embedding,
             threshold=self._threshold
         )
@@ -118,4 +150,3 @@ class Diarizer:
         model.load_state_dict(torch.load(param_path))
         model.eval()
         return model
-        

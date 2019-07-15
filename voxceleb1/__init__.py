@@ -1,5 +1,6 @@
 from . import neuron
 from . import preprocess
+from . import testing
 from . import training
 from . import utils
 
