@@ -1,3 +1,4 @@
+import numpy
 import sklearn.metrics
 
 def equal_error(y, yh):
