@@ -27,7 +27,7 @@ def main(
     dist_fn = [cosine_sim, euclidean_dist][use_embedding]
     dist = _compute_all_pair_dist(df, embedding_map, dist_fn)
     eer_scores = equal_error(df.label.values, dist)
-    print("EER: %.2f\nThreshold: %f" % eer_scores)
+    print("EER: %.4f\nThreshold: %f" % eer_scores)
 
 def _parse_pair_file(fpath):
     "Return DataFrame instance of the VoxCeleb1 verification test file."
@@ -50,13 +50,14 @@ def _map_file_to_embedding(
     use_embedding
 ):
     fpaths = [os.path.join(dataroot, f) for f in file_set]
-    embedding_iterator = pipeline(
+    embeddings = list(pipeline(
         fpaths, stat_path,
         speaker_id_config_path,
         speaker_dist_config_path,
         use_embedding
-    )
-    return dict(zip(file_set, embedding_iterator))
+    ))
+    assert len(file_set) == list(embeddings)
+    return dict(zip(file_set, embeddings))
 
 def _compute_all_pair_dist(df, embedding_map, dist_fn):
     yh = numpy.zeros(len(df))
