@@ -88,7 +88,7 @@ def run(fpath, miu, std, model):
     # Step 4: normalized spectrogram -> vector embedding
     with torch.no_grad():
         tx = torch.from_numpy(x).unsqueeze(0).unsqueeze(0)
-        embedding = model.extract(tx.float()).squeeze(0)
+        embedding = model.embed(tx.float()).squeeze(0)
         assert len(embedding.shape) == 1
 
     return embedding.clone()

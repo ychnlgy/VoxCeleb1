@@ -18,6 +18,7 @@ class _BaseModel(abc.ABC, torch.nn.Module):
         self._main = torch.nn.Sequential(
             *self.make_main_layers(latent_size)
         )
+        self._nograd_extract = False
         if unique_labels is None:
             self._tail = None
         else:
@@ -29,7 +30,7 @@ class _BaseModel(abc.ABC, torch.nn.Module):
         self._tail = torch.nn.Sequential(
             *self.make_embed_layers(latent_size, embed_size)
         )
-        self.forward = self.embed
+        self._nograd_extract = True
 
     def tail_parameters(self):
         return self._tail.parameters()
@@ -45,7 +46,10 @@ class _BaseModel(abc.ABC, torch.nn.Module):
         return self._tail(features)
 
     def forward(self, X):
-        return self._tail(self.extract(X))
+        if self._nograd_extract:
+            return self.embed(X)
+        else:
+            return self._tail(self.extract(X))
 
     @abc.abstractmethod
     def make_main_layers(self, latent_size):
