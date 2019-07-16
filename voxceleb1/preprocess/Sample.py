@@ -31,7 +31,6 @@ class Sample:
 
     def load(self):
         rate, data = scipy.io.wavfile.read(self.fpath)
-        print(self.fpath)
         self.rate, self.data = self._correct_raw_audio(rate, data)
         assert self.rate == EXPECTED_RATE, "File: %s has rate %d" % (
             self.fpath, self.rate
@@ -60,8 +59,11 @@ class Sample:
         if iinfo is not None:
             r = iinfo.max - iinfo.min
             data = (
-                data.astype(numpy.float32).mean(axis=-1) - iinfo.min
+                data.astype(numpy.float32) - iinfo.min
             ) / r * 2 - 1
+
+        if data.ndims == 2:
+            data = data.mean(axis=-1)
 
         if rate != EXPECTED_RATE:
 
@@ -76,5 +78,4 @@ class Sample:
             resampled = scipy.signal.resample(buf, M)
             rate, data = EXPECTED_RATE, resampled[:m]
 
-        print(data.shape)
         return rate, data
