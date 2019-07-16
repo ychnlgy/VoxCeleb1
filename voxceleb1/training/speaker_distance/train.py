@@ -45,7 +45,7 @@ def train(config, dataset, testset, cores, original_model, log):
     lossf = triplet_loss.batch_hard
     log.write("Loss function: triplet loss (batch-hard)")
 
-    params = list(model.parameters())
+    params = list(original_model.get_optimizing_params())
     
     optim = torch.optim.SGD(
         params,

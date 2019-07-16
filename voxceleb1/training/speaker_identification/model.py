@@ -32,11 +32,11 @@ class _BaseModel(abc.ABC, torch.nn.Module):
         )
         self._nograd_extract = True
 
-    def parameters(self):
+    def get_optimizing_params(self):
         if self._nograd_extract:
             return self._tail.parameters()
         else:
-            return super().parameters()
+            return self.parameters()
 
     def extract(self, X):
         shape = X.size()
