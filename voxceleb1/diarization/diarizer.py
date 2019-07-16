@@ -84,7 +84,7 @@ class Diarizer:
                 c1 = clusters[1]
                 c1.set_label(1)
                 clusters = self._cluster_clusters(
-                    root_clusters=clusters[:2],
+                    labelled_clusters=clusters[:2],
                     todo=clusters[2:]
                 )
         return clusters
