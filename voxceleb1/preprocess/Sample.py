@@ -51,6 +51,7 @@ class Sample:
 
     def _correct_raw_audio(self, rate, data):
         # Handle multi channel, different dtypes
+        print("In: %s" % data.shape)
         iinfo = numpy.iinfo(data.dtype)
         r = iinfo.max - iinfo.min
         data = (
@@ -70,4 +71,5 @@ class Sample:
             resampled = scipy.signal.resample(buf, M)
             rate, data = EXPECTED_RATE, resampled[:m]
 
+        print("Out:", data.shape)
         return rate, data
