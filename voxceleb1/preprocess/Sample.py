@@ -31,7 +31,9 @@ class Sample:
 
     def load(self):
         self.rate, self.data = scipy.io.wavfile.read(self.fpath)
-        assert self.rate == EXPECTED_RATE
+        assert self.rate == EXPECTED_RATE, "File: %s has rate %d" % (
+            self.fpath, self.rate
+        )
 
     def transform(self):
         f, t, spec = scipy.signal.spectrogram(
