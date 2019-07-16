@@ -53,7 +53,13 @@ def train(config, dataset, testset, cores, original_model, log):
         momentum=0.9,
         weight_decay=config.weight_decay
     )
+
     log.write("Optimizer:\n%s" % optim)
+
+    sched = torch.optim.lr_scheduler.CosineAnnealingLR(
+        optim, T_max=config.epochs
+    )
+    log.write("Learning rate scheduler:\n%s" % sched)
 
     param_count = sum(
         torch.numel(p)
@@ -82,6 +88,8 @@ def train(config, dataset, testset, cores, original_model, log):
 
                 avg.update(loss.item())
                 bar.set_description("Loss: %.4f" % avg.peek())
+
+            sched.step()
 
         log.write("Epoch %d/%d loss: %.4f" % (epoch, config.epochs, avg.peek()))
 

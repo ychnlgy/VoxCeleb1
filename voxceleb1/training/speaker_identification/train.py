@@ -82,6 +82,8 @@ def train(config, dataset, testset, cores, original_model, log):
 
                 scorer.update(Yh, Y)
 
+        sched.step()
+
         top1, top5 = scorer.peek()
         top1 *= 100.0
         top5 *= 100.0

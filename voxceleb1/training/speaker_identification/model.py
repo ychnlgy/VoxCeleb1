@@ -30,7 +30,13 @@ class _BaseModel(abc.ABC, torch.nn.Module):
         self._tail = torch.nn.Sequential(
             *self.make_embed_layers(latent_size, embed_size)
         )
-        #self._nograd_extract = True
+        self._nograd_extract = True
+
+    def parameters(self):
+        if self._nograd_extract:
+            return self._tail.parameters()
+        else:
+            return super().parameters()
 
     def extract(self, X):
         shape = X.size()
