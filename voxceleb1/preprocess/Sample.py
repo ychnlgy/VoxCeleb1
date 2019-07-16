@@ -62,7 +62,7 @@ class Sample:
                 data.astype(numpy.float32) - iinfo.min
             ) / r * 2 - 1
 
-        if data.ndims == 2:
+        if data.ndim == 2:
             data = data.mean(axis=-1)
 
         if rate != EXPECTED_RATE:
