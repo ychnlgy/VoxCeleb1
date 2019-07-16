@@ -31,6 +31,7 @@ class Sample:
 
     def load(self):
         rate, data = scipy.io.wavfile.read(self.fpath)
+        print(self.fpath)
         self.rate, self.data = self._correct_raw_audio(rate, data)
         assert self.rate == EXPECTED_RATE, "File: %s has rate %d" % (
             self.fpath, self.rate
