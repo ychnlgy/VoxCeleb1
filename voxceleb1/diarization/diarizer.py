@@ -58,7 +58,7 @@ class Diarizer:
     def _dbscan(self, embeddings):
         metric = ["cosine", "euclidean"][self._use_embedding]
         dbscan = sklearn.cluster.DBSCAN(
-            eps=self._t,
+            eps=self._threshold,
             min_samples=self._min_samples,
             metric=metric
         )
