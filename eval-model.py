@@ -20,5 +20,6 @@ if __name__ == "__main__":
         stat_path=args.stat_path,
         speaker_id_config_path=args.speaker_id_config_path,
         speaker_dist_config_path=args.speaker_dist_config_path,
-        use_embedding=args.use_embedding
+        use_embedding=args.use_embedding,
+        min_samples=args.min_samples
     )
