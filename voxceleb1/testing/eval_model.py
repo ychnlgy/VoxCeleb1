@@ -74,4 +74,4 @@ def cosine_sim(v1, v2):
 def _compute_pair_dist(f1, f2, embedding_map, dist_fn):
     v1 = embedding_map[f1]
     v2 = embedding_map[f2]
-    return dist_fn(v1, v2).numpy()
+    return dist_fn(v1, v2)
