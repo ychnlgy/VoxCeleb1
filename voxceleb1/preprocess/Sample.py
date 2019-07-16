@@ -55,7 +55,7 @@ class Sample:
         r = iinfo.max - iinfo.min
         data = (
             data.astype(numpy.float32).mean(axis=-1) - iinfo.min
-        ) / r * 2 - 1
+        ).reshape(-1, 1) / r * 2 - 1
 
         if rate != EXPECTED_RATE:
 
