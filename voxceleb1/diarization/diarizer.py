@@ -62,7 +62,7 @@ class Diarizer:
             min_samples=self._min_samples,
             metric=metric
         )
-        dbscan.fit(embeddings.numpy())
+        dbscan.fit(embeddings.cpu().numpy())
         return dbscan.labels_
 
     def _extract_embeddings(self, spec, fpath):
