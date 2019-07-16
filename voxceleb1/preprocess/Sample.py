@@ -75,4 +75,5 @@ class Sample:
             resampled = scipy.signal.resample(buf, M)
             rate, data = EXPECTED_RATE, resampled[:m]
 
+        print(data.shape)
         return rate, data
