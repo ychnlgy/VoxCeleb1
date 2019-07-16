@@ -5,6 +5,9 @@ import torch
 import torch.utils.data
 import tqdm
 
+import sklearn.cluster
+import sklearn.metrics.pairwise
+
 from .cluster import Cluster
 from .cluster_cossim import ClusterCossim
 from .dataset import Dataset
@@ -25,7 +28,8 @@ class Diarizer:
         slice_size,
         step_size,
         threshold,
-        use_embedding
+        use_embedding,
+        min_samples
     ):
         self._root = root
         self._device = ["cpu", "cuda"][torch.cuda.is_available()]
@@ -40,13 +44,26 @@ class Diarizer:
         self._slice_size = slice_size
         self._step_size = step_size
         self._threshold = threshold
+        self._min_samples = min_samples
 
     def process(self, fpath):
         spec = self._extract_spectrogram(fpath)
         embeddings = self._extract_embeddings(spec, fpath)
-        clusters = self._collect_clusters(embeddings)
-        joined_clusters = self._join_clusters(clusters)
-        return self._clean(joined_clusters)
+
+        return self._dbscan(embeddings)
+        #clusters = self._collect_clusters(embeddings)
+        #joined_clusters = self._join_clusters(clusters)
+        #return self._clean(joined_clusters)
+
+    def _dbscan(self, embeddings):
+        metric = ["cosine", "euclidean"][self._use_embedding]
+        dbscan = sklearn.cluster.DBSCAN(
+            eps=self._t,
+            min_samples=self._min_samples,
+            metric=metric
+        )
+        dbscan.fit(embeddings.numpy())
+        return dbscan.labels_
 
     def _extract_embeddings(self, spec, fpath):
         "Return the speaker embeddings made by the model on the spectrogram."
