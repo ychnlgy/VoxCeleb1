@@ -105,6 +105,7 @@ class Diarizer:
 
             # All clusters are retained
             labelled_clusters.append(cluster)
+        return labelled_clusters
 
     def _clean(self, joined_clusters):
         "Return a numpy array of labels as representation of diarization."
