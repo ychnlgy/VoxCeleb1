@@ -49,11 +49,18 @@ class Diarizer:
     def process(self, fpath):
         spec = self._extract_spectrogram(fpath)
         embeddings = self._extract_embeddings(spec, fpath)
-
-        return self._dbscan(embeddings)
+        return self._kmeans(embeddings, num_speakers=2)
+        #return self._dbscan(embeddings)
         #clusters = self._collect_clusters(embeddings)
         #joined_clusters = self._join_clusters(clusters)
         #return self._clean(joined_clusters)
+
+    def _kmeans(self, embeddings, num_speakers=2):
+        kmeans = sklearn.cluster.KMeans(
+            n_clusters=num_speakers
+        )
+        kmeans.fit(embeddings.cpu().numpy())
+        return kmeans.labels_
 
     def _dbscan(self, embeddings):
         metric = ["cosine", "euclidean"][self._use_embedding]
