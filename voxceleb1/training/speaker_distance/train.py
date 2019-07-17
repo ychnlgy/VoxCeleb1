@@ -58,12 +58,19 @@ def train(config, dataset, testset, cores, original_model, log):
 
     params = list(original_model.get_optimizing_params())
     
-    optim = torch.optim.SGD(
-        params,
-        lr=config.lr,
-        momentum=0.9,
-        weight_decay=config.weight_decay
-    )
+    optim = {
+        "sgd": torch.optim.SGD(
+            params,
+            lr=config.lr,
+            momentum=0.9,
+            weight_decay=config.weight_decay
+        ),
+        "adam": torch.optim.Adam(
+            params,
+            lr=config.lr,
+            weight_decay=config.weight_decay
+        )
+    }[config.optimizer]
 
     log.write("Optimizer:\n%s" % optim)
 
