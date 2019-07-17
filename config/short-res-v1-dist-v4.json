@@ -1,0 +1,1 @@
+{"path": "config/short-res-v1-dist-v4.json", "num_samples": 8, "modelf": "parameters/short-res-v1-dist-v4.torch", "lr": 0.01, "weight_decay": 1e-05, "epochs": 1000, "batch_size": 8, "_dob": "2019-07-17-15:24:15", "embed_size": 512, "continue_training": 1, "continue_training_modelf": "parameters/short-res-v1-dist-v3.torch"}

@@ -21,6 +21,15 @@ def train(config, dataset, testset, cores, original_model, log):
         original_model.load_state_dict(torch.load(config.modelf))
         return original_model
 
+    if config.continue_training:
+        log.write(
+            "Continue training parameters from:\n%s" \
+            % config.continue_training_modelf
+        )
+        original_model.load_state_dict(torch.load(
+            config.continue_training_modelf
+        ))
+
     if torch.cuda.is_available():
         device = "cuda"
         original_model = original_model.to(device)
