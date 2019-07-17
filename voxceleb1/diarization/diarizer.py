@@ -188,6 +188,12 @@ class Diarizer:
             latent_size=speaker_id_config.latent_size,
             unique_labels=unique_labels
         )
+
+        if self._use_embedding:
+            model.replace_tail(
+                latent_size=speaker_id_config.latent_size,
+                embed_size=speaker_dist_config.embed_size
+            )
         
         model.load_state_dict(torch.load(
             os.path.join(self._root, param_path)
