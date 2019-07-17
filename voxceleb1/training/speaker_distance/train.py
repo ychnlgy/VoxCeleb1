@@ -30,6 +30,8 @@ def train(config, dataset, testset, cores, original_model, log):
             config.continue_training_modelf
         ))
 
+    original_model.set_extract_optimize_flag(config.optimize_tail_only)
+
     if torch.cuda.is_available():
         device = "cuda"
         original_model = original_model.to(device)

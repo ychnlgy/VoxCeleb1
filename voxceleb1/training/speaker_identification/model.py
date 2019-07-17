@@ -26,6 +26,9 @@ class _BaseModel(abc.ABC, torch.nn.Module):
                 *self.make_tail_layers(latent_size, unique_labels)
             )
 
+    def set_extract_optimize_flag(self, flag):
+        self._nograd_extract = flag
+
     def replace_tail(self, latent_size, embed_size):
         self._tail = torch.nn.Sequential(
             *self.make_embed_layers(latent_size, embed_size)
