@@ -11,7 +11,6 @@ if __name__ == "__main__":
     parser.add_argument("--speaker_id_config_path", required=True)
     parser.add_argument("--speaker_dist_config_path", required=True)
     parser.add_argument("--use_embedding", type=int, required=True)
-    parser.add_argument("--min_samples", type=int, required=True)
     args = parser.parse_args()
 
     voxceleb1.testing.main(
@@ -21,5 +20,4 @@ if __name__ == "__main__":
         speaker_id_config_path=args.speaker_id_config_path,
         speaker_dist_config_path=args.speaker_dist_config_path,
         use_embedding=args.use_embedding,
-        min_samples=args.min_samples
     )
