@@ -109,6 +109,13 @@ def train(config, dataset, testset, cores, original_model, log):
 
             sched.step()
 
+            if epoch % config.save_cycle == 0:
+                temp_file = config.modelf + ".temp"
+                original_model = original_model.cpu()
+                torch.save(original_model.state_dict(), temp_file)
+                log.write("Saved model to %s" % temp_file)
+                original_model = original_model.to(device)
+
         log.write("Epoch %d/%d loss: %.4f" % (epoch, config.epochs, avg.peek()))
 
     dname = os.path.dirname(config.modelf)
